@@ -1,6 +1,6 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.domain.repository;
+package com.poo.projeto_final.domain.repository;
 
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model.Emprestimo;
+import com.poo.projeto_final.domain.model.emprestimo.Emprestimo;
 import org.springframework.data.repository.ListCrudRepository;
 
 public interface DAOEmprestimo extends ListCrudRepository<Emprestimo, Long> {

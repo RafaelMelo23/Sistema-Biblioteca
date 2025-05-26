@@ -1,17 +1,17 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.application.usecase;
+package com.poo.projeto_final.application.usecase;
 
+import com.poo.projeto_final.domain.repository.DAOExemplarLivro;
 import com.rafael.lucas.biblioteca.sistema_biblioteca.application.dto.projection.DTOExemplarLivro;
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.repository.DAOExemplarLivro;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BuscaEspecificaLivros {
+public class BuscaEspecificaLivroUseCase {
 
     private final DAOExemplarLivro daoExemplarLivro;
 
-    public BuscaEspecificaLivros(DAOExemplarLivro daoExemplarLivro) {
+    public BuscaEspecificaLivroUseCase(DAOExemplarLivro daoExemplarLivro) {
         this.daoExemplarLivro = daoExemplarLivro;
     }
 

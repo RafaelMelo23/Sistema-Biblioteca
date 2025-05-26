@@ -1,5 +1,7 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model;
+package com.poo.projeto_final.domain.model.emprestimo;
 
+import com.poo.projeto_final.domain.model.shared.vo.ExemplarLivroId;
+import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +21,8 @@ public class Emprestimo {
     private ExemplarLivroId exemplarLivroId;
 
     @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "aluno_id", nullable = false))
-    private AlunoId alunoId;
+    @AttributeOverride(name = "value", column = @Column(name = "matricula_id", nullable = false))
+    private Matricula matricula;
 
     @Column(name = "data_emprestimo", nullable = false)
     private LocalDate dataEmprestimo;
@@ -31,19 +33,18 @@ public class Emprestimo {
     @Column(name = "data_entrega_factual")
     private LocalDate dataFactual;
 
-    public Emprestimo realizarEmprestimo(AlunoId alunoId, ExemplarLivroId exemplarLivroId, LocalDate dataPrevista) {
+    public static Emprestimo realizarEmprestimo(Matricula Matricula, ExemplarLivroId exemplarLivroId, LocalDate dataPrevista) {
         Emprestimo emprestimo = new Emprestimo();
         emprestimo.setDataPrevista(dataPrevista);
         emprestimo.setDataEmprestimo(LocalDate.now());
-        emprestimo.setAlunoId(alunoId);
+        emprestimo.setMatricula(Matricula);
         emprestimo.setExemplarLivroId(exemplarLivroId);
 
         return emprestimo;
     }
-}
 
     @Embeddable
-    class EmprestimoId {
+    static class EmprestimoId {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "id", nullable = false)
         private Long value;
@@ -66,52 +67,5 @@ public class Emprestimo {
         public void setValue(Long value) {
             this.value = value;
         }
-    }
-
-    @Embeddable
-    class AlunoId {
-        private Long value;
-
-        public AlunoId() {
-        }
-
-        public AlunoId(Long value) {
-            this.value = value;
-        }
-
-        public static AlunoId of(Long value) {
-            return new AlunoId(value);
-        }
-
-        public Long getValue() {
-            return value;
-        }
-
-        public void setValue(Long value) {
-            this.value = value;
-        }
-    }
-
-    @Embeddable
-    class ExemplarLivroId {
-        private Long value;
-
-        public ExemplarLivroId() {
-        }
-
-        public ExemplarLivroId(Long value) {
-            this.value = value;
-        }
-
-    public static ExemplarLivroId of(Long value) {
-        return new ExemplarLivroId(value);
-    }
-
-    public Long getValue() {
-        return value;
-    }
-
-    public void setValue(Long value) {
-        this.value = value;
     }
 }

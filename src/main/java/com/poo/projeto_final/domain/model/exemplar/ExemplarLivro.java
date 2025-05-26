@@ -1,6 +1,9 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model;
+package com.poo.projeto_final.domain.model.exemplar;
 
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.enums.StatusExemplar;
+
+import com.poo.projeto_final.domain.enums.StatusExemplar;
+import com.poo.projeto_final.domain.model.livro.Livro;
+import com.poo.projeto_final.domain.model.shared.vo.ExemplarLivroId;
 import jakarta.persistence.*;
 
 @Entity
@@ -23,22 +26,6 @@ public class ExemplarLivro {
     private StatusExemplar statusExemplar;
 
     // A partir daqui, apenas Value Objects
-
-    @Embeddable
-    public static class ExemplarLivroId {
-
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "id", nullable = false)
-        private Long value;
-
-        protected ExemplarLivroId() {}
-
-        private ExemplarLivroId(Long value) { this.value = value; }
-
-        public static ExemplarLivroId of(Long value) { return new ExemplarLivroId(value); }
-
-        public Long getValue() { return value; }
-    }
 
     @Embeddable
     public static class CodigoExemplar {

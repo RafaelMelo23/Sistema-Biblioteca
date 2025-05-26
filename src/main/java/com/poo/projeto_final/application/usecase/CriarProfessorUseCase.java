@@ -1,8 +1,9 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.application.usecase;
+package com.poo.projeto_final.application.usecase;
 
-import com.rafael.lucas.biblioteca.sistema_biblioteca.application.dto.DTOProfessor;
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model.Professor;
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.repository.DAOProfessor;
+import com.poo.projeto_final.application.dto.DTOProfessor;
+import com.poo.projeto_final.domain.model.professor.Professor;
+import com.poo.projeto_final.domain.repository.DAOProfessor;
+
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,6 +1,7 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.domain.repository;
+package com.poo.projeto_final.domain.repository;
 
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model.Livro;
+
+import com.poo.projeto_final.domain.model.livro.Livro;
 import org.springframework.data.repository.ListCrudRepository;
 
 public interface DAOLivro extends ListCrudRepository<Livro, Long> {

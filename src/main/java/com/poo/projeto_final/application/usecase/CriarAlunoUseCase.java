@@ -1,8 +1,9 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.application.usecase;
+package com.poo.projeto_final.application.usecase;
 
-import com.rafael.lucas.biblioteca.sistema_biblioteca.application.dto.DTOAluno;
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model.Aluno;
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.repository.DAOAluno;
+import com.poo.projeto_final.application.dto.DTOAluno;
+import com.poo.projeto_final.domain.model.aluno.Aluno;
+import com.poo.projeto_final.domain.repository.DAOAluno;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

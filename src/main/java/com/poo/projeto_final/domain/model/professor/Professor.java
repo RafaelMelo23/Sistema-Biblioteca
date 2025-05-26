@@ -1,9 +1,12 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model;
+package com.poo.projeto_final.domain.model.professor;
 
+import com.poo.projeto_final.domain.model.usuario.UsuarioBiblioteca;
+import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "professor")
 public class Professor extends UsuarioBiblioteca {
 
@@ -20,23 +23,5 @@ public class Professor extends UsuarioBiblioteca {
 
     public static Professor of(String nome, String email, String cpf, String matricula) {
         return (Professor) criarProfessor(nome, email, cpf, matricula);
-    }
-
-    @Getter
-    @Embeddable
-    static class Matricula {
-        private String valor;
-
-        protected Matricula() {
-        }
-
-        private Matricula(String valor) {
-            this.valor = valor;
-        }
-
-        public static Matricula of(String valor) {
-            return new Matricula(valor);
-        }
-
     }
 }

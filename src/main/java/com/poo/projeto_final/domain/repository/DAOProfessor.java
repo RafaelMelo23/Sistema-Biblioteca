@@ -1,11 +1,16 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.domain.repository;
+package com.poo.projeto_final.domain.repository;
 
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model.Professor;
+
+import com.poo.projeto_final.domain.model.professor.Professor;
+import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import org.springframework.data.repository.ListCrudRepository;
+
+import java.util.Optional;
+
 
 public interface DAOProfessor extends ListCrudRepository<Professor, Long> {
 
-    boolean existsByEmailOrCpf(String email, String cpf);
-
     boolean existsByMatricula(String matricula);
+
+    Optional<Professor> findByMatricula(Matricula matricula);
 }

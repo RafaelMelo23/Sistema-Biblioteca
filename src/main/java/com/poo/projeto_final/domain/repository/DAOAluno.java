@@ -1,9 +1,10 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.domain.repository;
+package com.poo.projeto_final.domain.repository;
 
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model.Aluno;
+
+import com.poo.projeto_final.domain.model.aluno.Aluno;
+import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import org.springframework.data.repository.ListCrudRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface DAOAluno extends ListCrudRepository<Aluno, Long> {
@@ -13,5 +14,5 @@ public interface DAOAluno extends ListCrudRepository<Aluno, Long> {
 
     boolean existsByMatricula(String matricula);
 
-    Optional<Aluno> findByMatricula(String matricula);
+    Optional<Aluno> findByMatricula(Matricula matricula);
 }

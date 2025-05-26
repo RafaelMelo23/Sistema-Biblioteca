@@ -1,4 +1,4 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.domain.enums;
+package com.poo.projeto_final.domain.enums;
 
 public enum StatusExemplar {
 

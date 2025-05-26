@@ -1,10 +1,12 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model;
+package com.poo.projeto_final.domain.model.aluno;
 
+import com.poo.projeto_final.domain.model.usuario.UsuarioBiblioteca;
+import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
+@Getter
 public class Aluno extends UsuarioBiblioteca {
 
     @Embedded
@@ -22,25 +24,5 @@ public class Aluno extends UsuarioBiblioteca {
 
     public static Aluno of(String nome, String email, String cpf, String matricula) {
         return (Aluno) criarAluno(nome, email, cpf, matricula);
-    }
-
-    @Embeddable
-    static class Matricula {
-        private String value;
-
-        protected Matricula() {
-        }
-
-        private Matricula(String value) {
-            this.value = value;
-        }
-
-        public static Matricula of(String value) {
-            return new Matricula(value);
-        }
-
-        public String getValue() {
-            return value;
-        }
     }
 }

@@ -1,4 +1,4 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.domain.model;
+package com.poo.projeto_final.domain.model.livro;
 
 import jakarta.persistence.*;
 
