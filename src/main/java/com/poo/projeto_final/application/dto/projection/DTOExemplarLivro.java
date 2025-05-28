@@ -1,6 +1,8 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.application.dto.projection;
+package com.poo.projeto_final.application.dto.projection;
 
-import com.rafael.lucas.biblioteca.sistema_biblioteca.domain.enums.StatusExemplar;
+
+import com.poo.projeto_final.application.dto.DTOLivro;
+import com.poo.projeto_final.domain.enums.StatusExemplar;
 
 public interface DTOExemplarLivro {
 

@@ -1,7 +1,6 @@
 package com.poo.projeto_final.domain.model.shared.vo;
 
 import jakarta.persistence.Embeddable;
-import lombok.Getter;
 
 @Embeddable
 public class Matricula {

@@ -4,4 +4,7 @@ import com.poo.projeto_final.domain.enums.TipoUsuario;
 
 import java.time.LocalDate;
 
-public record DTOEmprestimo(String codigoExemplar, String matricula, LocalDate dataPrevista, TipoUsuario tipoUsuario) {}
+public record DTOEmprestimo(String codigoExemplar,
+                            String matricula,
+                            LocalDate dataPrevista,
+                            TipoUsuario tipoUsuario) {}

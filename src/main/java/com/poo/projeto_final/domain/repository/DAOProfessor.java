@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface DAOProfessor extends ListCrudRepository<Professor, Long> {
 
-    boolean existsByMatricula(String matricula);
+    boolean existsByMatricula(Matricula matricula);
 
     Optional<Professor> findByMatricula(Matricula matricula);
 }

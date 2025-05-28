@@ -1,4 +1,4 @@
-package com.rafael.lucas.biblioteca.sistema_biblioteca.application.dto.projection;
+package com.poo.projeto_final.application.dto.projection;
 
 public interface DTOLivro {
 

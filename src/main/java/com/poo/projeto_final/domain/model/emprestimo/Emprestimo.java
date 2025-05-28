@@ -1,5 +1,6 @@
 package com.poo.projeto_final.domain.model.emprestimo;
 
+import com.poo.projeto_final.domain.enums.StatusEmprestimo;
 import com.poo.projeto_final.domain.model.shared.vo.ExemplarLivroId;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import jakarta.persistence.*;
@@ -33,39 +34,18 @@ public class Emprestimo {
     @Column(name = "data_entrega_factual")
     private LocalDate dataFactual;
 
-    public static Emprestimo realizarEmprestimo(Matricula Matricula, ExemplarLivroId exemplarLivroId, LocalDate dataPrevista) {
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_emprestimo", nullable = false, length = 12)
+    private StatusEmprestimo statusEmprestimo;
+
+    public static Emprestimo realizarEmprestimo(Matricula Matricula, ExemplarLivroId exemplarLivroId, LocalDate dataPrevista, StatusEmprestimo statusEmprestimo) {
         Emprestimo emprestimo = new Emprestimo();
         emprestimo.setDataPrevista(dataPrevista);
         emprestimo.setDataEmprestimo(LocalDate.now());
         emprestimo.setMatricula(Matricula);
         emprestimo.setExemplarLivroId(exemplarLivroId);
+        emprestimo.setStatusEmprestimo(statusEmprestimo);
 
         return emprestimo;
-    }
-
-    @Embeddable
-    static class EmprestimoId {
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "id", nullable = false)
-        private Long value;
-
-        public EmprestimoId() {
-        }
-
-        public EmprestimoId(Long value) {
-            this.value = value;
-        }
-
-        public static EmprestimoId of(Long value) {
-            return new EmprestimoId(value);
-        }
-
-        public Long getValue() {
-            return value;
-        }
-
-        public void setValue(Long value) {
-            this.value = value;
-        }
     }
 }

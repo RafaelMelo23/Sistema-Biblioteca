@@ -1,6 +1,7 @@
 package com.poo.projeto_final.domain.service;
 
 import com.poo.projeto_final.application.dto.DTOEmprestimo;
+import com.poo.projeto_final.domain.enums.StatusEmprestimo;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.aluno.Aluno;
 import com.poo.projeto_final.domain.model.emprestimo.Emprestimo;
@@ -12,46 +13,50 @@ import com.poo.projeto_final.domain.repository.DAOEmprestimo;
 import com.poo.projeto_final.domain.repository.DAOExemplarLivro;
 import com.poo.projeto_final.domain.repository.DAOProfessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmprestimoService {
 
     private final DAOAluno daoAluno;
     private final DAOExemplarLivro daoExemplarLivro;
-    private final DAOProfessor dAOProfessor;
-    private final DAOEmprestimo dAOEmprestimo;
+    private final DAOProfessor daoProfessor;
+    private final DAOEmprestimo daoEmprestimo;
 
-    public EmprestimoService(DAOAluno daoAluno, DAOExemplarLivro daoExemplarLivro, DAOProfessor dAOProfessor, DAOEmprestimo dAOEmprestimo) {
+    public EmprestimoService(DAOAluno daoAluno, DAOExemplarLivro daoExemplarLivro, DAOProfessor daoProfessor, DAOEmprestimo daoEmprestimo) {
         this.daoAluno = daoAluno;
         this.daoExemplarLivro = daoExemplarLivro;
-        this.dAOProfessor = dAOProfessor;
-        this.dAOEmprestimo = dAOEmprestimo;
+        this.daoProfessor = daoProfessor;
+        this.daoEmprestimo = daoEmprestimo;
     }
 
-    public Emprestimo salvarEmprestimo(DTOEmprestimo dtoEmprestimo) {
+    @Transactional
+    public void registrarEmprestimo(DTOEmprestimo dtoEmprestimo) {
 
         Matricula matricula;
 
         ExemplarLivroId exemplarId = daoExemplarLivro.findByCodigoExemplarValueIs(dtoEmprestimo.codigoExemplar(), StatusExemplar.DISPONIVEL)
                 .orElseThrow(() -> new IllegalArgumentException("Não foi possível encontrar o livro, ou ele não está disponível"));
 
+        Long livroId = daoExemplarLivro.findLivroIdByExemplarLivroId(exemplarId)
+                .orElseThrow(() -> new IllegalArgumentException("Não foi possível encontrar um livro associado ao exemplar"));
+
         switch (dtoEmprestimo.tipoUsuario()) {
             case ALUNO:
                 Aluno aluno = daoAluno
                         .findByMatricula(Matricula.of(dtoEmprestimo.matricula()))
-                        .orElseThrow(() ->
-                                new IllegalArgumentException("Aluno com a matrícula informada não existe")
+                        .orElseThrow(() -> new IllegalArgumentException("Aluno com a matrícula informada não existe")
                         );
 
                 matricula = aluno.getMatricula();
                 break;
 
             case PROFESSOR:
-                Professor professor = dAOProfessor
+                Professor professor = daoProfessor
                         .findByMatricula(Matricula.of(dtoEmprestimo.matricula()))
-                        .orElseThrow(() ->
-                                new IllegalArgumentException("Professor com a matrícula informada não existe")
+                        .orElseThrow(() -> new IllegalArgumentException("Professor com a matrícula informada não existe")
                         );
+
                 matricula = professor.getMatricula();
                 break;
 
@@ -59,9 +64,31 @@ public class EmprestimoService {
                 throw new IllegalArgumentException("O tipo de usuário não foi informado");
         }
 
-        Emprestimo emprestimo = Emprestimo.realizarEmprestimo(matricula, exemplarId, dtoEmprestimo.dataPrevista());
+        if (daoEmprestimo.contarEmprestimosPorStatusPendente(matricula, livroId) > 0) {
+            throw new IllegalArgumentException("Não é possível ter um emprestimo pendente do mesmo livro.");
+        }
 
-        return dAOEmprestimo.save(emprestimo);
+        daoExemplarLivro.setStatusExemplar(StatusExemplar.EMPRESTADO, exemplarId);
+
+        Emprestimo emprestimo = Emprestimo.realizarEmprestimo(matricula, exemplarId, dtoEmprestimo.dataPrevista(), StatusEmprestimo.PENDENTE);
+
+        daoEmprestimo.save(emprestimo);
     }
 
+    public void atualizarEmprestimo(DTOEmprestimo dtoEmprestimo) {
+
+        ExemplarLivroId exemplarId = daoExemplarLivro.
+                findByCodigoExemplarValueIs(dtoEmprestimo.codigoExemplar(), StatusExemplar.EMPRESTADO)
+                .orElseThrow(() -> new IllegalArgumentException("Não foi possível encontrar o livro, ou ele não está emprestado"));
+
+        boolean isUsuarioValido = switch (dtoEmprestimo.tipoUsuario()) {
+            case ALUNO -> daoAluno.existsByMatricula(Matricula.of(dtoEmprestimo.matricula()));
+            case PROFESSOR -> daoProfessor.existsByMatricula(Matricula.of(dtoEmprestimo.matricula()));
+        };
+
+        if (!isUsuarioValido) throw new IllegalArgumentException("Usuário não existente com a matrícula informada");
+
+        daoExemplarLivro.setStatusExemplar(StatusExemplar.DISPONIVEL, exemplarId);
+        daoEmprestimo.setStatusEmprestimo(StatusEmprestimo.FINALIZADO, Matricula.of(dtoEmprestimo.matricula()));
+    }
 }

@@ -1,6 +1,5 @@
 package com.poo.projeto_final.domain.model.exemplar;
 
-
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.livro.Livro;
 import com.poo.projeto_final.domain.model.shared.vo.ExemplarLivroId;
@@ -25,19 +24,4 @@ public class ExemplarLivro {
     @Column(name = "status_exemplar", nullable = false, length = 30)
     private StatusExemplar statusExemplar;
 
-    // A partir daqui, apenas Value Objects
-
-    @Embeddable
-    public static class CodigoExemplar {
-
-        private String value;
-
-        protected CodigoExemplar() {}
-
-        private CodigoExemplar(String value) { this.value = value; }
-
-        public static CodigoExemplar of(String value) { return new CodigoExemplar(value); }
-
-        public String getValue() { return value; }
-    }
 }

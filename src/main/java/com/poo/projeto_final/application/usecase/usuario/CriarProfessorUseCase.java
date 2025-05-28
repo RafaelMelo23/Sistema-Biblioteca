@@ -1,7 +1,8 @@
-package com.poo.projeto_final.application.usecase;
+package com.poo.projeto_final.application.usecase.usuario;
 
 import com.poo.projeto_final.application.dto.DTOProfessor;
 import com.poo.projeto_final.domain.model.professor.Professor;
+import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import com.poo.projeto_final.domain.repository.DAOProfessor;
 
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class CriarProfessorUseCase {
 
     public void criarProfessor(DTOProfessor dtoProfessor) {
 
-       if (daoProfessor.existsByMatricula(dtoProfessor.matricula())) {
+       if (daoProfessor.existsByMatricula(Matricula.of(dtoProfessor.matricula()))) {
             throw new IllegalArgumentException("Já existe um professor cadastrado com a mátricula " + dtoProfessor.matricula());
         }
 

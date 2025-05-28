@@ -1,7 +1,8 @@
-package com.poo.projeto_final.application.usecase;
+package com.poo.projeto_final.application.usecase.usuario;
 
 import com.poo.projeto_final.application.dto.DTOAluno;
 import com.poo.projeto_final.domain.model.aluno.Aluno;
+import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import com.poo.projeto_final.domain.repository.DAOAluno;
 
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class CriarAlunoUseCase {
     @Transactional
     public void criarAluno(DTOAluno dtoAluno) {
 
-         if (daoAluno.existsByMatricula(dtoAluno.matricula())) {
+         if (daoAluno.existsByMatricula(Matricula.of(dtoAluno.matricula()))) {
              throw new IllegalArgumentException("Já existe um aluno registrado com a matrícula: " + dtoAluno.matricula());
          }
 

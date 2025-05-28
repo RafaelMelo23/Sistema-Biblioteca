@@ -1,8 +1,9 @@
-package com.poo.projeto_final.application.usecase;
+package com.poo.projeto_final.application.usecase.livro;
 
+import com.poo.projeto_final.application.dto.projection.DTOExemplarLivro;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.repository.DAOExemplarLivro;
-import com.rafael.lucas.biblioteca.sistema_biblioteca.application.dto.projection.DTOExemplarLivro;
+
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
