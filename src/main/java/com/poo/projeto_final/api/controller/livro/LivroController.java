@@ -8,6 +8,12 @@ import com.poo.projeto_final.application.usecase.livro.CriarLivroUseCase;
 import com.poo.projeto_final.domain.enums.StatusEmprestimo;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.livro.Livro;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -34,8 +40,16 @@ public class LivroController {
         this.buscaLivroPorTituloUseCase = buscaLivroPorTituloUseCase;
     }
 
+    @Operation(summary = "Criar um novo livro")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Livro criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Informações inválidas",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
     @PostMapping("/criar")
-    public ResponseEntity<?> criarLivro(DTOLivro dto) {
+    public ResponseEntity<?> criarLivro(@Parameter(description = "DTO contendo os dados do livro") @RequestBody DTOLivro dto) {
 
         try {
             criarLivroUseCase.criarLivro(dto);
@@ -48,14 +62,26 @@ public class LivroController {
         }
     }
 
+    @Operation(summary = "Buscar exemplares de um livro por status")
+    @ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Lista de exemplares retornada com sucesso",
+                    content = @Content(schema = @Schema(implementation = DTOExemplarLivro.class)))
+    })
     @GetMapping("/buscar/exemplares")
-    public List<DTOExemplarLivro> buscarLivros(@RequestParam Long livroId, @RequestParam StatusExemplar statusExemplar) {
+    public List<DTOExemplarLivro> buscarLivros(@Parameter(description = "ID do livro") @RequestParam Long livroId,
+                                               @Parameter(description = "Status do exemplar") @RequestParam StatusExemplar statusExemplar) {
 
         return buscaExemplarPorStatusUseCase.buscarExemplarPorStatus(livroId, statusExemplar);
     }
 
+    @Operation(summary = "Buscar livros cujo título contenha o termo informado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de livros encontrada",
+                    content = @Content(schema = @Schema(implementation = Livro.class)))
+    })
     @GetMapping("/buscar/titulo")
-    public CollectionModel<EntityModel<Livro>> buscarPorTituloContem(@RequestParam String titulo) {
+    public CollectionModel<EntityModel<Livro>> buscarPorTituloContem(@Parameter(description = "Parte do título a ser buscada")
+                                                                         @RequestParam String titulo) {
 
         List<Livro> livros = buscaLivroPorTituloUseCase.buscaLivroPorTituloContem(titulo);
 

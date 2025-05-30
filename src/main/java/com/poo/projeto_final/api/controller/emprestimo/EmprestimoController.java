@@ -7,6 +7,9 @@ import com.poo.projeto_final.application.usecase.emprestimo.DevolucaoEmprestimoU
 import com.poo.projeto_final.application.usecase.emprestimo.ListarEmprestimoPorIdUseCase;
 import com.poo.projeto_final.application.usecase.emprestimo.ListarEmprestimosUseCase;
 import com.poo.projeto_final.application.usecase.emprestimo.RealizarEmprestimoUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -35,6 +38,13 @@ public class EmprestimoController {
         this.listarEmprestimoPorIdUseCase = listarEmprestimoPorIdUseCase;
     }
 
+    @Operation(summary = "Listar todos os empréstimos de um usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empréstimos encontrados"),
+            @ApiResponse(responseCode = "404", description = "Nenhum empréstimo encontrado"),
+            @ApiResponse(responseCode = "400", description = "Matrícula inválida"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @GetMapping("/listar")
     public CollectionModel<EntityModel<DTOListarEmprestimo>> listarTodosEmprestimosUsuario(@RequestParam String matricula) {
 
@@ -66,6 +76,13 @@ public class EmprestimoController {
         }
     }
 
+    @Operation(summary = "Listar empréstimo específico por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empréstimo encontrado"),
+            @ApiResponse(responseCode = "404", description = "Empréstimo não encontrado"),
+            @ApiResponse(responseCode = "400", description = "ID inválido"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @GetMapping("/listar/{id}")
     public EntityModel<DTOListagemCompleta> listarEmprestimoEspecifico(@PathVariable Long id) {
 
@@ -92,6 +109,12 @@ public class EmprestimoController {
         }
     }
 
+    @Operation(summary = "Efetuar um empréstimo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Empréstimo realizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @PostMapping("/efetuar")
     public ResponseEntity<?> efetuarEmprestimo(@RequestBody DTOEmprestimo dtoEmprestimo) {
 
@@ -106,6 +129,12 @@ public class EmprestimoController {
         }
     }
 
+    @Operation(summary = "Realizar devolução de livro")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Devolução realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @PostMapping("/devolucao")
     public ResponseEntity<?> efetuarDevolucao(@RequestBody DTOEmprestimo dtoEmprestimo) {
 

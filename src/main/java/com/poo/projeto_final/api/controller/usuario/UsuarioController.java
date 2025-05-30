@@ -4,6 +4,12 @@ import com.poo.projeto_final.application.dto.DTOAluno;
 import com.poo.projeto_final.application.dto.DTOProfessor;
 import com.poo.projeto_final.application.usecase.usuario.CriarAlunoUseCase;
 import com.poo.projeto_final.application.usecase.usuario.CriarProfessorUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +28,18 @@ public class UsuarioController {
         this.criarProfessorUseCase = criarProfessorUseCase;
     }
 
+    @Operation(summary = "Cadastrar um novo aluno")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Aluno cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Informações inválidas",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Requisição sem corpo"),
+            @ApiResponse(responseCode = "500", description = "Erro interno ao cadastrar aluno",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
     @PostMapping("/cadastro/aluno")
-    public ResponseEntity<?> cadastrarAluno(@RequestBody DTOAluno aluno) {
+    public ResponseEntity<?> cadastrarAluno(@Parameter(description = "Dados do aluno a ser cadastrado")
+                                                @RequestBody DTOAluno aluno) {
 
         try {
             if (aluno == null) {
@@ -40,8 +56,18 @@ public class UsuarioController {
         }
     }
 
+    @Operation(summary = "Cadastrar um novo professor")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Professor cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Informações inválidas",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Requisição sem corpo"),
+            @ApiResponse(responseCode = "500", description = "Erro interno ao cadastrar professor",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
     @PostMapping("/cadastro/professor")
-    public ResponseEntity<?> cadastrarProfessor(@RequestBody DTOProfessor professor) {
+    public ResponseEntity<?> cadastrarProfessor(@Parameter(description = "Dados do professor a ser cadastrado")
+                                                    @RequestBody DTOProfessor professor) {
 
         try {
             if (professor == null) {
