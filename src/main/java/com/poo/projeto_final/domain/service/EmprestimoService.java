@@ -15,6 +15,9 @@ import com.poo.projeto_final.domain.repository.DAOProfessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Serviço responsável pela lógica de negócio relacionada aos empréstimos, validações e comunicação com o banco.
+ */
 @Service
 public class EmprestimoService {
 
@@ -30,6 +33,13 @@ public class EmprestimoService {
         this.daoEmprestimo = daoEmprestimo;
     }
 
+    /**
+     * Realiza um empréstimo com base no DTO (Data Transfer Object) recebido.
+     *
+     * @param dtoEmprestimo Dados do emprestimo a ser registrado.
+     * @throws IllegalArgumentException Caso o usuário tente registrar um emprestimo de um livro
+     * com outro emprestimo pendente do mesmo livro.
+     */
     @Transactional
     public void registrarEmprestimo(DTOEmprestimo dtoEmprestimo) {
 
@@ -75,6 +85,13 @@ public class EmprestimoService {
         daoEmprestimo.save(emprestimo);
     }
 
+    /**
+     * Atualiza (devolução) de um empréstimo já pendente.
+     *
+     * @param dtoEmprestimo Dados do emprestimo a ser atualizado.
+     * @throws IllegalArgumentException Caso não for possível encontrar o livro e/ou no status adequado.
+     * @throws IllegalArgumentException Caso não for possível encontrar o usuário com a matrícula informada.
+     */
     @Transactional
     public void atualizarEmprestimo(DTOEmprestimo dtoEmprestimo) {
 

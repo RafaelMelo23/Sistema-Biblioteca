@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Caso de uso responsável por buscar exemplares por id do livro, e status do exemplar, está na camada de caso
+ * de uso por não passar por validações.
+ */
 @Component
 public class BuscaExemplarPorStatusUseCase {
 

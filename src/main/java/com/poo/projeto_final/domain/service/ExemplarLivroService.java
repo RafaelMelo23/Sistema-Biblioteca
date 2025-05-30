@@ -10,15 +10,27 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Serviço responsável pela lógica de negócio relacionada aos exemplares dos livros, validações e comunicação com o banco.
+ */
 @Service
 public class ExemplarLivroService {
 
+    /**
+     * Interface JPA para chamadas ao banco relacionadas à tabela de exemplares.
+     */
     private final DAOExemplarLivro daoExemplarLivro;
 
     public ExemplarLivroService(DAOExemplarLivro daoExemplarLivro) {
         this.daoExemplarLivro = daoExemplarLivro;
     }
 
+    /**
+     * Cria os exemplares de um livro + seu código único de identificação.
+     *
+     * @param livro Dados do livro a serem cadastrados.
+     * @param quantidade Quantidade de exemplares únicos.
+     */
     @Transactional
     public void criarExemplar(Livro livro, int quantidade) {
 

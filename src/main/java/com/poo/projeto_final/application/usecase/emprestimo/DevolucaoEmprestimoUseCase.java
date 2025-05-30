@@ -5,6 +5,9 @@ import com.poo.projeto_final.domain.model.emprestimo.Emprestimo;
 import com.poo.projeto_final.domain.service.EmprestimoService;
 import org.springframework.stereotype.Component;
 
+/**
+ * Caso de uso responsável por orquestrar a devolução de um livro, existe apenas para manter a semântica da abordagem DDD.
+ */
 @Component
 public class DevolucaoEmprestimoUseCase {
 

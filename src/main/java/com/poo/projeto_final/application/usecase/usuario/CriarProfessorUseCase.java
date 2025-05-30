@@ -5,26 +5,20 @@ import com.poo.projeto_final.domain.model.professor.Professor;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import com.poo.projeto_final.domain.repository.DAOProfessor;
 
+import com.poo.projeto_final.domain.service.UsuarioService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CriarProfessorUseCase {
 
-    private final DAOProfessor daoProfessor;
+    private final UsuarioService usuarioService;
 
-    public CriarProfessorUseCase(DAOProfessor daoProfessor) {
-        this.daoProfessor = daoProfessor;
+    public CriarProfessorUseCase(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
     public void criarProfessor(DTOProfessor dtoProfessor) {
 
-       if (daoProfessor.existsByMatricula(Matricula.of(dtoProfessor.matricula()))) {
-            throw new IllegalArgumentException("Já existe um professor cadastrado com a mátricula " + dtoProfessor.matricula());
-        }
-
-       Professor professor = Professor.of(dtoProfessor.nome(), dtoProfessor.email(),
-               dtoProfessor.cpf(), dtoProfessor.matricula());
-
-       daoProfessor.save(professor);
+       usuarioService.criarProfessor(dtoProfessor);
     }
 }

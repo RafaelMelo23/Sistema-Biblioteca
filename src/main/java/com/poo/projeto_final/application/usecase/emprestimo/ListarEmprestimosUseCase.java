@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Caso de uso responsável por realizar a listagem dos empréstimos por matrícula de usuário, está na camada de caso
+ * de uso por não passar por validações.
+ */
 @Component
 public class ListarEmprestimosUseCase {
 
