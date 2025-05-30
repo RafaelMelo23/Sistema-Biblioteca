@@ -52,6 +52,6 @@ public interface DAOEmprestimo extends ListCrudRepository<Emprestimo, Long> {
                                                        JOIN Livro liv on ex.livro.id = liv.id
                                                        LEFT JOIN Aluno al ON al.matricula.value = emp.matricula
                                                        LEFT JOIN Professor prof ON prof.matricula.value = emp.matricula         \s
-                                                       WHERE emp.matricula = :matricula""")
+                                                       WHERE emp.id = :emprestimoId""")
     DTOListagemCompleta listarEmprestimosPorId(@Param("emprestimoId") Long emprestimoId);
 }

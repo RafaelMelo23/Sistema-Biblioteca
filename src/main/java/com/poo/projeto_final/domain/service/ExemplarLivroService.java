@@ -23,7 +23,7 @@ public class ExemplarLivroService {
     public void criarExemplar(Livro livro, int quantidade) {
 
         List<ExemplarLivro> novosExemplares = new ArrayList<>();
-        long contagemAtual = daoExemplarLivro.countExemplarLivro();
+        long contagemAtual = daoExemplarLivro.countExemplarLivroBy();
 
         for (int i = 1; i <= quantidade ; i++) {
 

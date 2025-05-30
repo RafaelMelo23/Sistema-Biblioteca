@@ -2,12 +2,9 @@ package com.poo.projeto_final.domain.repository;
 
 import com.poo.projeto_final.application.dto.projection.DTOExemplarLivro;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
-import com.poo.projeto_final.domain.model.exemplar.CodigoExemplar;
 import com.poo.projeto_final.domain.model.exemplar.ExemplarLivro;
 import com.poo.projeto_final.domain.model.shared.vo.ExemplarLivroId;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
@@ -18,7 +15,7 @@ import java.util.Optional;
 
 public interface DAOExemplarLivro extends ListCrudRepository<ExemplarLivro, Long> {
 
-    long countExemplarLivro();
+    long countExemplarLivroBy();
 
     @Modifying
     @Query("UPDATE ExemplarLivro ex SET ex.statusExemplar = :statusExemplar " +
