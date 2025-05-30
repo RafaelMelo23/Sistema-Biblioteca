@@ -23,7 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/api/emprestimo")
 public class EmprestimoController {
 
-
     private final ListarEmprestimosUseCase listarEmprestimosUseCase;
     private final RealizarEmprestimoUseCase realizarEmprestimoUseCase;
     private final DevolucaoEmprestimoUseCase devolucaoEmprestimoUseCase;

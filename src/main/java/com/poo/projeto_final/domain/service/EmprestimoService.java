@@ -75,6 +75,7 @@ public class EmprestimoService {
         daoEmprestimo.save(emprestimo);
     }
 
+    @Transactional
     public void atualizarEmprestimo(DTOEmprestimo dtoEmprestimo) {
 
         ExemplarLivroId exemplarId = daoExemplarLivro.

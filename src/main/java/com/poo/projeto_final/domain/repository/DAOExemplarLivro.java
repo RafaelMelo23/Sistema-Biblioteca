@@ -13,21 +13,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface DAOExemplarLivro extends ListCrudRepository<ExemplarLivro, Long> {
 
-    long countByLivro_Id(Long idLivro);
+    long countExemplarLivro();
 
     @Modifying
     @Query("UPDATE ExemplarLivro ex SET ex.statusExemplar = :statusExemplar " +
             "WHERE ex.id = :exemplarId")
     void setStatusExemplar(@Param("statusExemplar") StatusExemplar statusExemplar,
                            @Param("exemplarId") ExemplarLivroId exemplarId);
-
-    Page<DTOExemplarLivro> findByStatusExemplarIs(StatusExemplar statusExemplar, Pageable pageable);
-
-    Page<DTOExemplarLivro> findByLivro_Titulo(String titulo, Pageable pageable);
 
     @Query("SELECT e.id FROM ExemplarLivro e " +
             "WHERE e.codigoExemplar.value = :codigoExemplar " +
@@ -37,4 +34,6 @@ public interface DAOExemplarLivro extends ListCrudRepository<ExemplarLivro, Long
 
     @Query("SELECT e.livro.id FROM ExemplarLivro e WHERE e.id = :exemplarId")
     Optional<Long> findLivroIdByExemplarLivroId(@Param("exemplarId") ExemplarLivroId exemplarLivroId);
+
+    List<DTOExemplarLivro> findByLivro_IdAndStatusExemplar(Long livroId, StatusExemplar statusExemplar);
 }

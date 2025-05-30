@@ -4,8 +4,12 @@ import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.livro.Livro;
 import com.poo.projeto_final.domain.model.shared.vo.ExemplarLivroId;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "exemplar_livro")
 public class ExemplarLivro {
 
@@ -23,5 +27,15 @@ public class ExemplarLivro {
     @Enumerated(EnumType.STRING)
     @Column(name = "status_exemplar", nullable = false, length = 30)
     private StatusExemplar statusExemplar;
+
+    public static ExemplarLivro criarExemplar(Livro livro, CodigoExemplar codigoExemplar) {
+        ExemplarLivro novoExemplar = new ExemplarLivro();
+
+        novoExemplar.setLivro(livro);
+        novoExemplar.setCodigoExemplar(codigoExemplar);
+        novoExemplar.setStatusExemplar(StatusExemplar.DISPONIVEL);
+
+        return novoExemplar;
+    }
 
 }
