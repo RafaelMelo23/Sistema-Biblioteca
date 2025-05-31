@@ -1,7 +1,6 @@
 package com.poo.projeto_final.domain.model.emprestimo;
 
 import com.poo.projeto_final.domain.enums.StatusEmprestimo;
-import com.poo.projeto_final.domain.model.shared.vo.ExemplarLivroId;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,12 +13,13 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "emprestimo")
 public class Emprestimo {
-    @EmbeddedId
-    private EmprestimoId id;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "exemplar_livro_id", nullable = false))
-    private ExemplarLivroId exemplarLivroId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "exemplar_livro_id", nullable = false)
+    private Long exemplarLivroId;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "matricula_id", nullable = false))
@@ -38,7 +38,7 @@ public class Emprestimo {
     @Column(name = "status_emprestimo", nullable = false, length = 12)
     private StatusEmprestimo statusEmprestimo;
 
-    public static Emprestimo realizarEmprestimo(Matricula Matricula, ExemplarLivroId exemplarLivroId, LocalDate dataPrevista, StatusEmprestimo statusEmprestimo) {
+    public static Emprestimo realizarEmprestimo(Matricula Matricula, Long exemplarLivroId, LocalDate dataPrevista, StatusEmprestimo statusEmprestimo) {
         Emprestimo emprestimo = new Emprestimo();
         emprestimo.setDataPrevista(dataPrevista);
         emprestimo.setDataEmprestimo(LocalDate.now());

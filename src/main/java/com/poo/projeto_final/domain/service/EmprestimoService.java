@@ -6,7 +6,6 @@ import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.aluno.Aluno;
 import com.poo.projeto_final.domain.model.emprestimo.Emprestimo;
 import com.poo.projeto_final.domain.model.professor.Professor;
-import com.poo.projeto_final.domain.model.shared.vo.ExemplarLivroId;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import com.poo.projeto_final.domain.repository.DAOAluno;
 import com.poo.projeto_final.domain.repository.DAOEmprestimo;
@@ -45,7 +44,7 @@ public class EmprestimoService {
 
         Matricula matricula;
 
-        ExemplarLivroId exemplarId = daoExemplarLivro.findByCodigoExemplarValueIs(dtoEmprestimo.codigoExemplar(), StatusExemplar.DISPONIVEL)
+        Long exemplarId = daoExemplarLivro.findByCodigoExemplarValueIs(dtoEmprestimo.codigoExemplar(), StatusExemplar.DISPONIVEL)
                 .orElseThrow(() -> new IllegalArgumentException("Não foi possível encontrar o livro, ou ele não está disponível"));
 
         Long livroId = daoExemplarLivro.findLivroIdByExemplarLivroId(exemplarId)
@@ -80,7 +79,7 @@ public class EmprestimoService {
 
         daoExemplarLivro.setStatusExemplar(StatusExemplar.EMPRESTADO, exemplarId);
 
-        Emprestimo emprestimo = Emprestimo.realizarEmprestimo(matricula, exemplarId, dtoEmprestimo.dataPrevista(), StatusEmprestimo.PENDENTE);
+        Emprestimo emprestimo = Emprestimo.realizarEmprestimo(matricula, exemplarId, dtoEmprestimo.dataPrevista(), StatusEmprestimo.ATIVO);
 
         daoEmprestimo.save(emprestimo);
     }
@@ -95,7 +94,7 @@ public class EmprestimoService {
     @Transactional
     public void atualizarEmprestimo(DTOEmprestimo dtoEmprestimo) {
 
-        ExemplarLivroId exemplarId = daoExemplarLivro.
+        Long exemplarId = daoExemplarLivro.
                 findByCodigoExemplarValueIs(dtoEmprestimo.codigoExemplar(), StatusExemplar.EMPRESTADO)
                 .orElseThrow(() -> new IllegalArgumentException("Não foi possível encontrar o livro, ou ele não está emprestado"));
 

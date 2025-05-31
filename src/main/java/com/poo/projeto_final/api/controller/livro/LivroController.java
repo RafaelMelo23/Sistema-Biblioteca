@@ -5,7 +5,6 @@ import com.poo.projeto_final.application.dto.projection.DTOExemplarLivro;
 import com.poo.projeto_final.application.usecase.livro.BuscaExemplarPorStatusUseCase;
 import com.poo.projeto_final.application.usecase.livro.BuscaLivroPorTituloUseCase;
 import com.poo.projeto_final.application.usecase.livro.CriarLivroUseCase;
-import com.poo.projeto_final.domain.enums.StatusEmprestimo;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.livro.Livro;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -21,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -30,6 +30,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/api/livro")
 public class LivroController {
 
+    private static final Logger logger = LoggerFactory.getLogger(LivroController.class);
     private final CriarLivroUseCase criarLivroUseCase;
     private final BuscaExemplarPorStatusUseCase buscaExemplarPorStatusUseCase;
     private final BuscaLivroPorTituloUseCase buscaLivroPorTituloUseCase;
@@ -56,8 +57,10 @@ public class LivroController {
 
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
+            logger.error("Erro ao criar livro, provável corpo inválido. {}", e.getMessage(), e);
             return ResponseEntity.badRequest().body("Erro ao criar livro, informações inválidas");
         } catch (Exception e) {
+            logger.error("Erro ao criar livro, erro interno. " + e.getMessage(), e);
             return ResponseEntity.internalServerError().body("Erro ao criar livro");
         }
     }

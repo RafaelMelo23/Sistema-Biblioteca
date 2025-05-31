@@ -24,23 +24,23 @@ public interface DAOEmprestimo extends ListCrudRepository<Emprestimo, Long> {
             "JOIN ExemplarLivro ex ON ex.livro.id = :livroId " +
             "WHERE e.matricula = :matricula " +
             "AND ex.livro.id = :livroId " +
-            "AND (e.statusEmprestimo = com.poo.projeto_final.domain.enums.StatusEmprestimo.PENDENTE " +
+            "AND (e.statusEmprestimo = com.poo.projeto_final.domain.enums.StatusEmprestimo.ATIVO " +
             "OR e.statusEmprestimo = com.poo.projeto_final.domain.enums.StatusEmprestimo.ATRASADO)")
     long contarEmprestimosPorStatusPendente(@Param("matricula") Matricula matricula,
                                             @Param("livroId") Long livroId);
 
     @Query("""
-           SELECT new com.poo.projeto_final.application.dto.DTOListarEmprestimo(emp.id.value,
-                                liv.titulo.value, 
+           SELECT new com.poo.projeto_final.application.dto.DTOListarEmprestimo(emp.id,
+                                liv.titulo.value,\s
                                 ex.codigoExemplar.value, emp.dataEmprestimo, emp.dataPrevista, emp.dataFactual,
                                 emp.statusEmprestimo, COALESCE(al.nome.value, prof.nome.value))
                                                         FROM Emprestimo emp
                                                         JOIN ExemplarLivro ex ON emp.exemplarLivroId = ex.id
                                                         JOIN Livro liv on ex.livro.id = liv.id
-                                                        LEFT JOIN Aluno al ON al.matricula.value = emp.matricula
-                                                        LEFT JOIN Professor prof ON prof.matricula.value = emp.matricula          
-                                                        WHERE emp.matricula = :matricula""")
-    List<DTOListarEmprestimo> listarEmprestimosUsuario(@Param("matricula") Matricula matricula);
+                                                        LEFT JOIN Aluno al ON al.matricula.value = emp.matricula.value
+                                                        LEFT JOIN Professor prof ON prof.matricula.value = emp.matricula.value         \s
+                                                        WHERE emp.matricula.value = :matricula""")
+    List<DTOListarEmprestimo> listarEmprestimosUsuario(@Param("matricula") String matricula);
 
     @Query("""
             SELECT new com.poo.projeto_final.application.dto.DTOListagemCompleta(COALESCE(al.nome.value, prof.nome.value),
@@ -50,8 +50,8 @@ public interface DAOEmprestimo extends ListCrudRepository<Emprestimo, Long> {
                                                        FROM Emprestimo emp
                                                        JOIN ExemplarLivro ex ON emp.exemplarLivroId = ex.id
                                                        JOIN Livro liv on ex.livro.id = liv.id
-                                                       LEFT JOIN Aluno al ON al.matricula.value = emp.matricula
-                                                       LEFT JOIN Professor prof ON prof.matricula.value = emp.matricula         \s
+                                                       LEFT JOIN Aluno al ON al.matricula.value = emp.matricula.value
+                                                       LEFT JOIN Professor prof ON prof.matricula.value = emp.matricula.value        \s
                                                        WHERE emp.id = :emprestimoId""")
     DTOListagemCompleta listarEmprestimosPorId(@Param("emprestimoId") Long emprestimoId);
 }

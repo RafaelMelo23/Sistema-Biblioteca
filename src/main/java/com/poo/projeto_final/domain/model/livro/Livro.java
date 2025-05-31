@@ -22,7 +22,7 @@ public class Livro {
     private Autor autor;
 
     @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "isbn", nullable = false, unique = true, length = 13))
+    @AttributeOverride(name = "value", column = @Column(name = "isbn", nullable = false, unique = true, length = 14))
     private Isbn isbn;
 
     @Embedded

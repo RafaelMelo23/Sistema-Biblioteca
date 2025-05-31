@@ -2,7 +2,6 @@ package com.poo.projeto_final.domain.model.exemplar;
 
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.livro.Livro;
-import com.poo.projeto_final.domain.model.shared.vo.ExemplarLivroId;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +12,9 @@ import lombok.Setter;
 @Table(name = "exemplar_livro")
 public class ExemplarLivro {
 
-    @EmbeddedId
-    private ExemplarLivroId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     @JoinColumn(name = "livro_id", nullable = false)

@@ -1,12 +1,13 @@
 package com.poo.projeto_final.domain.model.aluno;
 
-import com.poo.projeto_final.domain.model.usuario.UsuarioBiblioteca;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
+import com.poo.projeto_final.domain.model.usuario.UsuarioBiblioteca;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
 @Getter
+@Table(name = "aluno")
 public class Aluno extends UsuarioBiblioteca {
 
     @Embedded
@@ -18,11 +19,11 @@ public class Aluno extends UsuarioBiblioteca {
     }
 
     public Aluno(String nome, String email, String cpf, String matricula) {
-        super(nome, email, cpf);
+        super(nome, cpf, email);
         this.matricula = new Matricula(matricula);
     }
 
     public static Aluno of(String nome, String email, String cpf, String matricula) {
-        return (Aluno) criarAluno(nome, email, cpf, matricula);
+        return (Aluno) criarAluno(nome, cpf, email, matricula);
     }
 }

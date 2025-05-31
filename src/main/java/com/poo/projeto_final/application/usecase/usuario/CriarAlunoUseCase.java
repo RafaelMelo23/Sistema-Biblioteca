@@ -1,10 +1,6 @@
 package com.poo.projeto_final.application.usecase.usuario;
 
 import com.poo.projeto_final.application.dto.DTOAluno;
-import com.poo.projeto_final.domain.model.aluno.Aluno;
-import com.poo.projeto_final.domain.model.shared.vo.Matricula;
-import com.poo.projeto_final.domain.repository.DAOAluno;
-
 import com.poo.projeto_final.domain.service.UsuarioService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

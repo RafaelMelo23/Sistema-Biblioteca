@@ -6,18 +6,18 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "usuario_biblioteca")
 @Getter
 public class UsuarioBiblioteca {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "nome", nullable = false, length = 20))
+    @AttributeOverride(name = "value", column = @Column(name = "nome", nullable = false, length = 40))
     private Nome nome;
 
     @Embedded

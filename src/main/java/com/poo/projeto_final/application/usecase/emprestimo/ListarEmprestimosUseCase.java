@@ -1,7 +1,6 @@
 package com.poo.projeto_final.application.usecase.emprestimo;
 
 import com.poo.projeto_final.application.dto.DTOListarEmprestimo;
-import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import com.poo.projeto_final.domain.repository.DAOEmprestimo;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +21,6 @@ public class ListarEmprestimosUseCase {
 
     public List<DTOListarEmprestimo> listarEmpretimosUsuarioUseCase(String matricula) {
 
-        return daoEmprestimo.listarEmprestimosUsuario(Matricula.of(matricula));
+        return daoEmprestimo.listarEmprestimosUsuario(matricula);
     }
 }

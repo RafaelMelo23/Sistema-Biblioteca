@@ -18,6 +18,6 @@ public class RealizarEmprestimoUseCase {
 
     public void executarEmprestimo(DTOEmprestimo dtoEmprestimo) {
 
-        servicoEmprestimo.atualizarEmprestimo(dtoEmprestimo);
+        servicoEmprestimo.registrarEmprestimo(dtoEmprestimo);
     }
 }
