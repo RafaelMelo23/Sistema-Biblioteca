@@ -16,7 +16,7 @@ public class Professor extends UsuarioBiblioteca {
 
     public Professor() {}
 
-    public Professor(String nome, String email, String cpf, String matricula) {
+    public Professor(String nome, String cpf, String email, String matricula) {
         super(nome, cpf, email);
         this.matricula = new Matricula(matricula);
     }

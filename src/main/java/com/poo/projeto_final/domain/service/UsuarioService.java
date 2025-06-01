@@ -5,8 +5,12 @@ import com.poo.projeto_final.application.dto.DTOProfessor;
 import com.poo.projeto_final.domain.model.aluno.Aluno;
 import com.poo.projeto_final.domain.model.professor.Professor;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
+import com.poo.projeto_final.domain.model.usuario.Cpf;
+import com.poo.projeto_final.domain.model.usuario.Email;
 import com.poo.projeto_final.domain.repository.DAOAluno;
 import com.poo.projeto_final.domain.repository.DAOProfessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +18,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UsuarioService {
+
+    private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
 
     /**
      * Interfaces JPA para chamadas ao banco relacionadas à tabela de alunos e professores.
@@ -29,7 +35,7 @@ public class UsuarioService {
     /**
      * Cadastra um novo aluno baseado no DTO recebido.
      * @param dtoAluno Dados do aluno a serem cadastrados.
-     * @throws IllegalArgumentException Caso exista um aluno já cadastrado com a matrícula informada no DTO.
+     * @throws IllegalArgumentException Caso exista um aluno já cadastrado com algum dos dados informados no DTO.
      */
     public void criarAluno(DTOAluno dtoAluno) {
 
@@ -37,15 +43,24 @@ public class UsuarioService {
             throw new IllegalArgumentException("Já existe um aluno registrado com a matrícula: " + dtoAluno.matricula());
         }
 
-        Aluno aluno = Aluno.of(dtoAluno.nome(), dtoAluno.email(), dtoAluno.cpf(), dtoAluno.matricula());
+        if (daoAluno.existsByEmailOrCpf(Email.of(dtoAluno.email()), Cpf.of(dtoAluno.cpf()))) {
+            throw new IllegalArgumentException("Já existe um aluno registrado com a matrícula: " + dtoAluno.matricula());
+        }
 
-        daoAluno.save(aluno);
+        try {
+            Aluno aluno = Aluno.of(dtoAluno.nome(), dtoAluno.email(), dtoAluno.cpf(), dtoAluno.matricula());
+
+            daoAluno.save(aluno);
+        } catch (Exception e) {
+            log.error("Erro ao criar aluno: {}", e.getMessage(), e);
+            throw new IllegalArgumentException("Erro ao criar aluno: " + e.getMessage());
+        }
     }
 
     /**
      * Cadastra um novo professor baseado no DTO recebido.
      * @param dtoProfessor Dados do professor a serem cadastrados.
-     * @throws IllegalArgumentException Caso exista um professor já cadastrado com a matrícula informada no DTO.
+     * @throws IllegalArgumentException Caso exista um professor já cadastrado com algum dos dados informados no DTO.
      */
     public void criarProfessor(DTOProfessor dtoProfessor) {
 
@@ -53,10 +68,15 @@ public class UsuarioService {
             throw new IllegalArgumentException("Já existe um professor cadastrado com a mátricula " + dtoProfessor.matricula());
         }
 
-        Professor professor = Professor.of(dtoProfessor.nome(), dtoProfessor.email(),
-                dtoProfessor.cpf(), dtoProfessor.matricula());
+        try {
+            Professor professor = Professor.of(dtoProfessor.nome(), dtoProfessor.email(),
+                    dtoProfessor.cpf(), dtoProfessor.matricula());
 
-        daoProfessor.save(professor);
+            daoProfessor.save(professor);
+        } catch (Exception e) {
+            log.error("Erro ao criar professor: {}", e.getMessage(), e);
+            throw new IllegalArgumentException("Erro ao criar professor: " + e.getMessage());
+        }
     }
 
 }

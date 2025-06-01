@@ -11,6 +11,8 @@ import com.poo.projeto_final.domain.repository.DAOAluno;
 import com.poo.projeto_final.domain.repository.DAOEmprestimo;
 import com.poo.projeto_final.domain.repository.DAOExemplarLivro;
 import com.poo.projeto_final.domain.repository.DAOProfessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,7 @@ public class EmprestimoService {
     private final DAOExemplarLivro daoExemplarLivro;
     private final DAOProfessor daoProfessor;
     private final DAOEmprestimo daoEmprestimo;
+    Logger logger = LoggerFactory.getLogger(EmprestimoService.class);
 
     public EmprestimoService(DAOAluno daoAluno, DAOExemplarLivro daoExemplarLivro, DAOProfessor daoProfessor, DAOEmprestimo daoEmprestimo) {
         this.daoAluno = daoAluno;
@@ -79,9 +82,13 @@ public class EmprestimoService {
 
         daoExemplarLivro.setStatusExemplar(StatusExemplar.EMPRESTADO, exemplarId);
 
-        Emprestimo emprestimo = Emprestimo.realizarEmprestimo(matricula, exemplarId, dtoEmprestimo.dataPrevista(), StatusEmprestimo.ATIVO);
+        try {
+            Emprestimo emprestimo = Emprestimo.realizarEmprestimo(matricula, exemplarId, dtoEmprestimo.dataPrevista(), StatusEmprestimo.ATIVO);
 
-        daoEmprestimo.save(emprestimo);
+            daoEmprestimo.save(emprestimo);
+        } catch (Exception e) {
+            logger.error("Erro ao registrar emprestimo: {}", e.getMessage(), e);
+        }
     }
 
     /**

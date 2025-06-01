@@ -4,6 +4,8 @@ import com.poo.projeto_final.domain.model.exemplar.CodigoExemplar;
 import com.poo.projeto_final.domain.model.exemplar.ExemplarLivro;
 import com.poo.projeto_final.domain.model.livro.Livro;
 import com.poo.projeto_final.domain.repository.DAOExemplarLivro;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ public class ExemplarLivroService {
      * Interface JPA para chamadas ao banco relacionadas à tabela de exemplares.
      */
     private final DAOExemplarLivro daoExemplarLivro;
+    Logger logger = LoggerFactory.getLogger(ExemplarLivroService.class);
 
     public ExemplarLivroService(DAOExemplarLivro daoExemplarLivro) {
         this.daoExemplarLivro = daoExemplarLivro;
@@ -37,18 +40,23 @@ public class ExemplarLivroService {
         List<ExemplarLivro> novosExemplares = new ArrayList<>();
         long contagemAtual = daoExemplarLivro.countExemplarLivroBy();
 
-        for (int i = 1; i <= quantidade ; i++) {
+        try {
 
-            int quantidadeAtual = Math.toIntExact(contagemAtual + i);
+            for (int i = 1; i <= quantidade; i++) {
 
-            String codigoExemplar = gerarCodigoExemplar(quantidadeAtual);
+                int quantidadeAtual = Math.toIntExact(contagemAtual + i);
 
-            ExemplarLivro novoExemplar = ExemplarLivro.criarExemplar(livro, CodigoExemplar.of(codigoExemplar));
+                String codigoExemplar = gerarCodigoExemplar(quantidadeAtual);
 
-            novosExemplares.add(novoExemplar);
+                ExemplarLivro novoExemplar = ExemplarLivro.criarExemplar(livro, CodigoExemplar.of(codigoExemplar));
+
+                novosExemplares.add(novoExemplar);
+            }
+
+            daoExemplarLivro.saveAll(novosExemplares);
+        } catch (Exception e) {
+            logger.error("Erro ao criar exemplar: {}", e.getMessage(), e);
         }
-
-        daoExemplarLivro.saveAll(novosExemplares);
     }
 
     public String gerarCodigoExemplar(long exemplarAtual) {

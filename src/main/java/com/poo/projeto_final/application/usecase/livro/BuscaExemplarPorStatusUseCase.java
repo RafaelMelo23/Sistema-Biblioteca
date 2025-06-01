@@ -1,10 +1,11 @@
 package com.poo.projeto_final.application.usecase.livro;
 
-import com.poo.projeto_final.application.dto.projection.DTOExemplarLivro;
+import com.poo.projeto_final.application.dto.DTOExemplarLivro;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.repository.DAOExemplarLivro;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,17 @@ public class BuscaExemplarPorStatusUseCase {
 
     public List<DTOExemplarLivro> buscarExemplarPorStatus(Long livroId, StatusExemplar status) {
 
-        return dAOExemplarLivro.findByLivro_IdAndStatusExemplar(livroId, status);
+         List<DTOExemplarLivro> interfaceDTO = dAOExemplarLivro.buscarPorLivroEStatus(livroId, status);
+
+         List<DTOExemplarLivro> dtoConcreto = new ArrayList<>();
+
+         for (DTOExemplarLivro dtoInterface : interfaceDTO) {
+             DTOExemplarLivro dto = new DTOExemplarLivro(dtoInterface.codigoExemplar(), dtoInterface.statusExemplar());
+
+             dtoConcreto.add(dto);
+         }
+
+         return dtoConcreto;
     }
 
 }

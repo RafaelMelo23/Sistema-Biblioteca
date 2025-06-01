@@ -12,7 +12,7 @@ import lombok.Getter;
 public class UsuarioBiblioteca {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
 

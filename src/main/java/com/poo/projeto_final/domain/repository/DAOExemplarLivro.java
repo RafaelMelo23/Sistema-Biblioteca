@@ -1,6 +1,6 @@
 package com.poo.projeto_final.domain.repository;
 
-import com.poo.projeto_final.application.dto.projection.DTOExemplarLivro;
+import com.poo.projeto_final.application.dto.DTOExemplarLivro;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.exemplar.ExemplarLivro;
 import org.springframework.data.jpa.repository.Modifying;
@@ -25,10 +25,22 @@ public interface DAOExemplarLivro extends ListCrudRepository<ExemplarLivro, Long
             "WHERE e.codigoExemplar.value = :codigoExemplar " +
             "AND e.statusExemplar = :statusExemplar")
     Optional<Long> findByCodigoExemplarValueIs(@Param("codigoExemplar") String codigoExemplarValue,
-                                                          @Param("statusExemplar") StatusExemplar statusExemplar);
+                                               @Param("statusExemplar") StatusExemplar statusExemplar);
 
     @Query("SELECT e.livro.id FROM ExemplarLivro e WHERE e.id = :exemplarId")
     Optional<Long> findLivroIdByExemplarLivroId(@Param("exemplarId") Long exemplarLivroId);
 
-    List<DTOExemplarLivro> findByLivro_IdAndStatusExemplar(Long livroId, StatusExemplar statusExemplar);
+    @Query("""
+                SELECT new com.poo.projeto_final.application.dto.DTOExemplarLivro(
+                    e.codigoExemplar.value,
+                    e.statusExemplar
+                )
+                FROM ExemplarLivro e
+                WHERE e.livro.id = :livroId AND e.statusExemplar = :status
+            """)
+    List<DTOExemplarLivro> buscarPorLivroEStatus(
+            @Param("livroId") Long livroId,
+            @Param("status") StatusExemplar status
+    );
+
 }

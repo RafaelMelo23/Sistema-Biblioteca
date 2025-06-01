@@ -20,14 +20,15 @@ public interface DAOEmprestimo extends ListCrudRepository<Emprestimo, Long> {
     void setStatusEmprestimo(@Param("statusEmprestimo") StatusEmprestimo statusEmprestimo,
                             @Param("matricula") Matricula matricula);
 
-    @Query("SELECT COUNT(e) FROM Emprestimo e " +
-            "JOIN ExemplarLivro ex ON ex.livro.id = :livroId " +
+    @Query("SELECT COUNT(e) " +
+            "FROM Emprestimo e " +
+            "JOIN ExemplarLivro ex ON ex.id = e.exemplarLivroId " +
             "WHERE e.matricula = :matricula " +
-            "AND ex.livro.id = :livroId " +
-            "AND (e.statusEmprestimo = com.poo.projeto_final.domain.enums.StatusEmprestimo.ATIVO " +
-            "OR e.statusEmprestimo = com.poo.projeto_final.domain.enums.StatusEmprestimo.ATRASADO)")
+            "  AND ex.livro.id = :livroId " +
+            "  AND (e.statusEmprestimo = com.poo.projeto_final.domain.enums.StatusEmprestimo.ATIVO  " +
+            "    OR e.statusEmprestimo = com.poo.projeto_final.domain.enums.StatusEmprestimo.ATRASADO)")
     long contarEmprestimosPorStatusPendente(@Param("matricula") Matricula matricula,
-                                            @Param("livroId") Long livroId);
+                                            @Param("livroId")   Long livroId);
 
     @Query("""
            SELECT new com.poo.projeto_final.application.dto.DTOListarEmprestimo(emp.id,

@@ -5,6 +5,8 @@ import com.poo.projeto_final.domain.model.livro.Isbn;
 import com.poo.projeto_final.domain.model.livro.Livro;
 import com.poo.projeto_final.domain.model.livro.Titulo;
 import com.poo.projeto_final.domain.repository.DAOLivro;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ public class LivroService {
      * Interface JPA para chamadas ao banco relacionadas à tabela de livros.
      */
     private final DAOLivro daoLivro;
+    Logger logger = LoggerFactory.getLogger(LivroService.class);
 
     public LivroService(DAOLivro daoLivro) {
         this.daoLivro = daoLivro;
@@ -41,11 +44,16 @@ public class LivroService {
             throw new IllegalArgumentException("Isbn já cadastrado");
         }
 
-        Livro livro = Livro.criarLivro(dtoLivro.titulo(), dtoLivro.autor(),
-                dtoLivro.isbn(), dtoLivro.ano(), dtoLivro.editora());
+        try {
+            Livro livro = Livro.criarLivro(dtoLivro.titulo(), dtoLivro.autor(),
+                    dtoLivro.isbn(), dtoLivro.ano(), dtoLivro.editora());
 
-        daoLivro.save(livro);
+            return daoLivro.save(livro);
 
-        return livro;
+        } catch (Exception e) {
+            logger.error("Erro ao cadastrar livro: {}", e.getMessage(), e);
+            throw new IllegalArgumentException("Erro ao cadastrar livro: " + e.getMessage());
+        }
+
     }
 }

@@ -22,7 +22,7 @@ public class BuscaLivroPorTituloUseCase {
 
     public List<Livro> buscaLivroPorTituloContem(String titulo) {
 
-        return daoLivro.findByTituloContains(Titulo.of(titulo));
+        return daoLivro.findByTituloContains(titulo);
     }
 
 }

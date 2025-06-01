@@ -1,7 +1,7 @@
 package com.poo.projeto_final.api.controller.livro;
 
+import com.poo.projeto_final.application.dto.DTOExemplarLivro;
 import com.poo.projeto_final.application.dto.DTOLivro;
-import com.poo.projeto_final.application.dto.projection.DTOExemplarLivro;
 import com.poo.projeto_final.application.usecase.livro.BuscaExemplarPorStatusUseCase;
 import com.poo.projeto_final.application.usecase.livro.BuscaLivroPorTituloUseCase;
 import com.poo.projeto_final.application.usecase.livro.CriarLivroUseCase;

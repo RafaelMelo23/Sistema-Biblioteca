@@ -6,6 +6,7 @@ import com.poo.projeto_final.domain.model.livro.Livro;
 import com.poo.projeto_final.domain.model.livro.Titulo;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public interface DAOLivro extends ListCrudRepository<Livro, Long> {
 
     boolean existsByIsbn(Isbn isbn);
 
-    @Query("SELECT l FROM Livro l WHERE l.titulo.value LIKE %:titulo%")
-    List<Livro> findByTituloContains(Titulo titulo);
+    @Query("SELECT l FROM Livro l WHERE l.titulo.value LIKE CONCAT('%', :titulo, '%')")
+    List<Livro> findByTituloContains(@Param("titulo") String titulo);
 }
