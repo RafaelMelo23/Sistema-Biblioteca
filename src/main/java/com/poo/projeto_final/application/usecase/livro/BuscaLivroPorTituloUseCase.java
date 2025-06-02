@@ -1,7 +1,6 @@
 package com.poo.projeto_final.application.usecase.livro;
 
 import com.poo.projeto_final.domain.model.livro.Livro;
-import com.poo.projeto_final.domain.model.livro.Titulo;
 import com.poo.projeto_final.domain.repository.DAOLivro;
 import org.springframework.stereotype.Component;
 

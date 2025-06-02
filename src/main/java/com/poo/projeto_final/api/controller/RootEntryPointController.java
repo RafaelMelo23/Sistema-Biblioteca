@@ -4,6 +4,7 @@ import com.poo.projeto_final.api.controller.emprestimo.EmprestimoController;
 import com.poo.projeto_final.api.controller.livro.LivroController;
 import com.poo.projeto_final.api.controller.usuario.UsuarioController;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,12 +21,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class RootEntryPointController {
 
     @GetMapping
-    public EntityModel<String> caminhoRaiz() {
+    public RepresentationModel<?> caminhoRaiz() {
 
-        return EntityModel.of(
-                "API Biblioteca",
+        RepresentationModel<?> model = new RepresentationModel<>();
+
+        model.add(
                 // APIs Livro
-                linkTo(methodOn(LivroController.class).buscarPorTituloContem("{titulo}")).withRel("buscar-por-titulo"),
+                linkTo(methodOn(LivroController.class).buscarPorTituloContem(null)).withRel("buscar-por-titulo"),
                 linkTo(methodOn(LivroController.class).buscarLivros(null, null)).withRel("buscar-livro-id"),
                 linkTo(methodOn(LivroController.class).criarLivro(null)).withRel("criar-livro"),
 
@@ -34,11 +36,12 @@ public class RootEntryPointController {
                 linkTo(methodOn(UsuarioController.class).cadastrarProfessor(null)).withRel("criar-professor"),
 
                 // APIs Emprestimo
-                linkTo(methodOn(EmprestimoController.class).listarTodosEmprestimosUsuario("{matricula}")).withRel("listar-emprestimos-by-matricula"),
+                linkTo(methodOn(EmprestimoController.class).listarTodosEmprestimosUsuario(null)).withRel("listar-emprestimos-by-matricula"),
                 linkTo(methodOn(EmprestimoController.class).listarEmprestimoEspecifico(null)).withRel("listar-emprestimos-by-emprestimo-id"),
                 linkTo(methodOn(EmprestimoController.class).efetuarEmprestimo(null)).withRel("realizar-emprestimo"),
                 linkTo(methodOn(EmprestimoController.class).efetuarDevolucao(null)).withRel("realizar-devolucao")
-
         );
+
+        return model;
     }
 }

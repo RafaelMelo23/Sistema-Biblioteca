@@ -10,6 +10,9 @@ import lombok.Getter;
 @Table(name = "aluno")
 public class Aluno extends UsuarioBiblioteca {
 
+    /* Na regra de negócio fictícia, a matrícula não é um número gerado pela biblioteca, e sim reaproveitado. O aluno já teria esse número,
+    tal qual o RGM por exemplo. Por isso não existe método para geração automática e sequencial da matrícula.
+     */
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "matricula", nullable = false, unique = true, length = 20))
     private Matricula matricula;

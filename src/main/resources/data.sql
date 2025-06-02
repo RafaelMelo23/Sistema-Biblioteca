@@ -26,7 +26,7 @@ VALUES (1, 'Rafael Silva', '12345678901', 'rafael@email.com'),
         (2, 1, 'EXEMP002', 'EMPRESTADO'),
         (3, 2, 'EXEMP003', 'DISPONIVEL');
 
- INSERT INTO emprestimo (id, exemplar_livro_id, matricula_id, data_emprestimo, data_entrega_prevista,
-                         data_entrega_factual, status_emprestimo)
- VALUES (1, 2, 'MAT20230001', DATE '2025-05-01', DATE '2025-05-15', NULL, 'ATIVO'),
-        (2, 3, 'MAT20230002', DATE '2025-04-20', DATE '2025-05-04', DATE '2025-05-03', 'FINALIZADO');
+ --INSERT INTO emprestimo (id, exemplar_livro_id, matricula_id, data_emprestimo, data_entrega_prevista,
+ --                        data_entrega_factual, status_emprestimo)
+ --VALUES (1, 2, 'MAT20230001', DATE '2025-05-01', DATE '2025-05-15', NULL, 'ATIVO'),
+ --       (2, 3, 'MAT20230002', DATE '2025-04-20', DATE '2025-05-04', DATE '2025-05-03', 'FINALIZADO');
