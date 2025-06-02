@@ -46,7 +46,6 @@ public class EmprestimoController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Empréstimos encontrados"), @ApiResponse(responseCode = "404", description = "Nenhum empréstimo encontrado"), @ApiResponse(responseCode = "400", description = "Matrícula inválida"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
     @GetMapping("/listar")
     public CollectionModel<EntityModel<DTOListarEmprestimo>> listarTodosEmprestimosUsuario(@RequestParam String matricula) {
-        logger.info("Requisição recebida para listar todos os empréstimos da matrícula: {}", matricula);
 
         try {
             List<DTOListarEmprestimo> emprestimoDTO = listarEmprestimosUseCase.listarEmpretimosUsuarioUseCase(matricula);
@@ -57,8 +56,6 @@ public class EmprestimoController {
             }
 
             List<EntityModel<DTOListarEmprestimo>> emprestimoModel = emprestimoDTO.stream().map(dto -> EntityModel.of(dto, linkTo(methodOn(EmprestimoController.class).listarTodosEmprestimosUsuario(matricula)).withSelfRel(), linkTo(methodOn(EmprestimoController.class).listarEmprestimoEspecifico(dto.emprestimoid())).withRel("emprestimo-especifico"))).toList();
-
-            logger.info("Empréstimos encontrados para a matrícula {}: {}", matricula, emprestimoDTO.size());
 
             return CollectionModel.of(emprestimoModel, linkTo(methodOn(EmprestimoController.class).listarTodosEmprestimosUsuario(matricula)).withSelfRel());
 
@@ -75,7 +72,6 @@ public class EmprestimoController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Empréstimo encontrado"), @ApiResponse(responseCode = "404", description = "Empréstimo não encontrado"), @ApiResponse(responseCode = "400", description = "ID inválido"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
     @GetMapping("/listar/{id}")
     public EntityModel<DTOListagemCompleta> listarEmprestimoEspecifico(@PathVariable Long id) {
-        logger.info("Requisição recebida para listar empréstimo com ID: {}", id);
 
         try {
             DTOListagemCompleta dto = listarEmprestimoPorIdUseCase.listarEmprestimoPorId(id);
@@ -84,8 +80,6 @@ public class EmprestimoController {
                 logger.warn("Nenhum empréstimo encontrado com ID {}", id);
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foi encontrado o empréstimo com o ID informado");
             }
-
-            logger.info("Empréstimo encontrado com ID: {}", id);
 
             return EntityModel.of(dto, linkTo(methodOn(EmprestimoController.class).listarEmprestimoEspecifico(id)).withSelfRel(), linkTo(methodOn(EmprestimoController.class).listarTodosEmprestimosUsuario(dto.matricula())).withRel("todos-emprestimos"));
 
@@ -102,12 +96,10 @@ public class EmprestimoController {
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Empréstimo realizado com sucesso"), @ApiResponse(responseCode = "400", description = "Dados inválidos"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
     @PostMapping("/efetuar")
     public ResponseEntity<?> efetuarEmprestimo(@RequestBody DTOEmprestimo dtoEmprestimo) {
-        logger.info("Requisição recebida para efetuar empréstimo: {}", dtoEmprestimo);
 
         try {
             realizarEmprestimoUseCase.executarEmprestimo(dtoEmprestimo);
 
-            logger.info("Empréstimo efetuado com sucesso para: {}", dtoEmprestimo);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             logger.error("Erro de argumento ao efetuar empréstimo: {}", e.getMessage(), e);
@@ -122,12 +114,10 @@ public class EmprestimoController {
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Devolução realizada com sucesso"), @ApiResponse(responseCode = "400", description = "Dados inválidos"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
     @PostMapping("/devolucao")
     public ResponseEntity<?> efetuarDevolucao(@RequestBody DTOEmprestimo dtoEmprestimo) {
-        logger.info("Requisição recebida para efetuar devolução: {}", dtoEmprestimo);
 
         try {
             devolucaoEmprestimoUseCase.executarDevolucao(dtoEmprestimo);
 
-            logger.info("Devolução efetuada com sucesso para: {}", dtoEmprestimo);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             logger.error("Erro de argumento ao efetuar devolução: {}", e.getMessage(), e);

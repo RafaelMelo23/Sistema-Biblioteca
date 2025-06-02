@@ -30,6 +30,7 @@ public class LivroService {
      * Cadastra um novo livro baseado no DTO recebido.
      *
      * @param dtoLivro Dados do livro a serem cadastrados.
+     * @Transactional garante que as mudanças no banco só sejam commitadas caso o método tenha sucesso, caso contrário, são revertidas
      * @return Livro cadastrado.
      * @throws IllegalArgumentException Caso o título ou ISBN já estejam cadastrados.
      */

@@ -39,6 +39,7 @@ public class EmprestimoService {
      * Realiza um empréstimo com base no DTO (Data Transfer Object) recebido.
      *
      * @param dtoEmprestimo Dados do emprestimo a ser registrado.
+     * @Transactional garante que as mudanças no banco só sejam commitadas caso o método tenha sucesso, caso contrário, são revertidas
      * @throws IllegalArgumentException Caso o usuário tente registrar um emprestimo de um livro
      * com outro emprestimo pendente do mesmo livro.
      */
@@ -95,6 +96,7 @@ public class EmprestimoService {
      * Atualiza (devolução) de um empréstimo já pendente.
      *
      * @param dtoEmprestimo Dados do emprestimo a ser atualizado.
+     * @Transactional garante que as mudanças no banco só sejam commitadas caso o método tenha sucesso, caso contrário, são revertidas
      * @throws IllegalArgumentException Caso não for possível encontrar o livro e/ou no status adequado.
      * @throws IllegalArgumentException Caso não for possível encontrar o usuário com a matrícula informada.
      */

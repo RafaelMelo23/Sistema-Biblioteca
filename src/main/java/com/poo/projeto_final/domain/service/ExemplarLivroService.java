@@ -30,7 +30,7 @@ public class ExemplarLivroService {
 
     /**
      * Cria os exemplares de um livro + seu código único de identificação.
-     *
+     * @Transactional garante que as mudanças no banco só sejam commitadas caso o método tenha sucesso, caso contrário, são revertidas
      * @param livro Dados do livro a serem cadastrados.
      * @param quantidade Quantidade de exemplares únicos.
      */

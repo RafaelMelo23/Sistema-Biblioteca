@@ -12,6 +12,7 @@ import com.poo.projeto_final.domain.repository.DAOProfessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Serviço responsável pela lógica de negócio relacionada aos usuários, validações e comunicação com o banco.
@@ -35,8 +36,10 @@ public class UsuarioService {
     /**
      * Cadastra um novo aluno baseado no DTO recebido.
      * @param dtoAluno Dados do aluno a serem cadastrados.
+     * @Transactional garante que as mudanças no banco só sejam commitadas caso o método tenha sucesso, caso contrário, são revertidas
      * @throws IllegalArgumentException Caso exista um aluno já cadastrado com algum dos dados informados no DTO.
      */
+    @Transactional
     public void criarAluno(DTOAluno dtoAluno) {
 
         if (daoAluno.existsByMatricula(Matricula.of(dtoAluno.matricula()))) {
@@ -60,8 +63,10 @@ public class UsuarioService {
     /**
      * Cadastra um novo professor baseado no DTO recebido.
      * @param dtoProfessor Dados do professor a serem cadastrados.
+     * @Transactional garante que as mudanças no banco só sejam commitadas caso o método tenha sucesso, caso contrário, são revertidas
      * @throws IllegalArgumentException Caso exista um professor já cadastrado com algum dos dados informados no DTO.
      */
+    @Transactional
     public void criarProfessor(DTOProfessor dtoProfessor) {
 
         if (daoProfessor.existsByMatricula(Matricula.of(dtoProfessor.matricula()))) {

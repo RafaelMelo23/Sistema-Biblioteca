@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Biblioteca</title>
+    <link href="/css/index.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Sistema de Gestão de Biblioteca</h1>
+        <p>Controle Completo da Biblioteca</p>
+    </div>
+
+    <div class="disclaimer">
+        Todas as ações neste sistema são feitas pelo bibliotecário. Não há múltiplos usuários nem autenticação.
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="trocarAba('emprestimos')">Empréstimos</button>
+        <button class="tab" onclick="trocarAba('livros')">Livros</button>
+        <button class="tab" onclick="trocarAba('usuarios')">Usuários</button>
+    </div>
+
+    <!-- Aba Empréstimos -->
+    <div id="emprestimos" class="tab-content active">
+        <div class="content-grid">
+            <!-- Buscar Empréstimos -->
+            <div class="section">
+                <h3>Consultar Empréstimos por Matrícula</h3>
+                <div class="form-group">
+                    <label for="matricula">Matrícula do Usuário:</label>
+                    <input type="text" id="matricula" placeholder="Digite a matrícula do usuário">
+                </div>
+                <button onclick="buscarEmprestimos()">Buscar Empréstimos</button>
+            </div>
+
+            <!-- Realizar Empréstimo -->
+            <div class="section">
+                <h3>Realizar Novo Empréstimo</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="matriculaEmprestimo">Matrícula do Usuário:</label>
+                        <input type="text" id="matriculaEmprestimo" placeholder="Matrícula">
+                    </div>
+                    <div class="form-group">
+                        <label for="codigoExemplar">Código do Exemplar:</label>
+                        <input type="text" id="codigoExemplar" placeholder="Código do exemplar">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dataPrevista">Data Prevista de Devolução:</label>
+                        <input type="date" id="dataPrevista">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoUsuario">Tipo de Usuário:</label>
+                        <select id="tipoUsuario">
+                            <option value="">Selecione o tipo</option>
+                            <option value="ALUNO">Aluno</option>
+                            <option value="PROFESSOR">Professor</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-success" onclick="realizarEmprestimo()">Realizar Empréstimo</button>
+                <div id="resultadoEmprestimo"></div>
+            </div>
+        </div>
+
+        <!-- Realizar Devolução -->
+        <div class="section">
+            <h3>Realizar Devolução</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="matriculaDevolucao">Matrícula do Usuário:</label>
+                    <input type="text" id="matriculaDevolucao" placeholder="Matrícula">
+                </div>
+                <div class="form-group">
+                    <label for="codigoExemplarDevolucao">Código do Exemplar:</label>
+                    <input type="text" id="codigoExemplarDevolucao" placeholder="Código do exemplar">
+                </div>
+            </div>
+            <button class="btn-danger" onclick="realizarDevolucao()">Realizar Devolução</button>
+            <div id="resultadoDevolucao"></div>
+        </div>
+
+        <div id="resultadosBusca" class="results"></div>
+    </div>
+
+    <!-- Aba Livros -->
+    <div id="livros" class="tab-content">
+        <div class="content-grid">
+            <!-- Buscar Livros -->
+            <div class="section">
+                <h3>Buscar Livros</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tituloLivro">Buscar por Título:</label>
+                        <input type="text" id="tituloLivro" placeholder="Digite parte do título">
+                    </div>
+                    <div class="form-group">
+                        <label for="idLivro">Buscar por ID:</label>
+                        <input type="text" id="idLivro" placeholder="Digite o ID do livro">
+                    </div>
+                </div>
+                <button onclick="buscarLivroTitulo()" class="btn-warning">Buscar por Título</button>
+                <button onclick="buscarLivroId()">Buscar por ID</button>
+            </div>
+
+            <!-- Cadastrar Livro -->
+            <div class="section">
+                <h3>Cadastrar Novo Livro</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="novoTitulo">Título:</label>
+                        <input type="text" id="novoTitulo" placeholder="Título do livro">
+                    </div>
+                    <div class="form-group">
+                        <label for="novoAutor">Autor:</label>
+                        <input type="text" id="novoAutor" placeholder="Nome do autor">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="novoIsbn">ISBN:</label>
+                        <input type="text" id="novoIsbn" placeholder="ISBN do livro">
+                    </div>
+                    <div class="form-group">
+                        <label for="novoAno">Ano:</label>
+                        <input type="text" id="novoAno" placeholder="Ano de publicação">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="novaEditora">Editora:</label>
+                        <input type="text" id="novaEditora" placeholder="Nome da editora">
+                    </div>
+                    <div class="form-group">
+                        <label for="novaQuantidade">Quantidade:</label>
+                        <input type="number" id="novaQuantidade" placeholder="Número de exemplares" min="1">
+                    </div>
+                </div>
+                <button class="btn-success" onclick="cadastrarLivro()">Cadastrar Livro</button>
+                <div id="resultadoLivro"></div>
+            </div>
+        </div>
+
+        <div id="resultadosLivros" class="results"></div>
+    </div>
+
+    <!-- Aba Usuários -->
+    <div id="usuarios" class="tab-content">
+        <div class="content-grid">
+            <!-- Cadastrar Aluno -->
+            <div class="section">
+                <h3>Cadastrar Aluno</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nomeAluno">Nome:</label>
+                        <input type="text" id="nomeAluno" placeholder="Nome completo do aluno">
+                    </div>
+                    <div class="form-group">
+                        <label for="cpfAluno">CPF:</label>
+                        <input type="text" id="cpfAluno" placeholder="CPF do aluno">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emailAluno">Email:</label>
+                        <input type="email" id="emailAluno" placeholder="Email do aluno">
+                    </div>
+                    <div class="form-group">
+                        <label for="matriculaAluno">Matrícula:</label>
+                        <input type="text" id="matriculaAluno" placeholder="Matrícula do aluno">
+                    </div>
+                </div>
+                <button class="btn-success" onclick="cadastrarAluno()">Cadastrar Aluno</button>
+                <div id="resultadoAluno"></div>
+            </div>
+
+            <!-- Cadastrar Professor -->
+            <div class="section">
+                <h3>Cadastrar Professor</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nomeProfessor">Nome:</label>
+                        <input type="text" id="nomeProfessor" placeholder="Nome completo do professor">
+                    </div>
+                    <div class="form-group">
+                        <label for="cpfProfessor">CPF:</label>
+                        <input type="text" id="cpfProfessor" placeholder="CPF do professor">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emailProfessor">Email:</label>
+                        <input type="email" id="emailProfessor" placeholder="Email do professor">
+                    </div>
+                    <div class="form-group">
+                        <label for="matriculaProfessor">Matrícula:</label>
+                        <input type="text" id="matriculaProfessor" placeholder="Matrícula do professor">
+                    </div>
+                </div>
+                <button class="btn-success" onclick="cadastrarProfessor()">Cadastrar Professor</button>
+                <div id="resultadoProfessor"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/index.js"></script>
+</body>
+</html>
