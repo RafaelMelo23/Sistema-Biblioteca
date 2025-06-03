@@ -43,14 +43,14 @@ public class UsuarioController {
 
         try {
             if (aluno == null) {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.badRequest().body("O corpo está vazio");
             }
 
             criarAlunoUseCase.criarAluno(aluno);
 
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Informações inválidas");
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erro inesperado ao cadastrar aluno");
         }
@@ -71,14 +71,14 @@ public class UsuarioController {
 
         try {
             if (professor == null) {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.badRequest().body("O corpo está vazio");
             }
 
             criarProfessorUseCase.criarProfessor(professor);
 
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Informações inválidas");
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erro inesperado ao cadastrar professor");
         }

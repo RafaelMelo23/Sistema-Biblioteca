@@ -1,10 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários - Sistema de Biblioteca</title>
+    <link href="/css/usuario.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="container">
+    <div class="navigation">
+        <h3>Navegação</h3>
+        <div class="nav-links">
+            <a href="/">Empréstimos</a>
+            <a href="/livro">Livros</a>
 
+        </div>
+    </div>
+
+    <div class="header">
+        <h1>Cadastro de Usuários</h1>
+        <p>Cadastre alunos e professores no sistema</p>
+    </div>
+
+    <div class="disclaimer">
+        <strong>Importante:</strong> Todos os campos são obrigatórios. Certifique-se de que os dados estão corretos
+        antes de confirmar o cadastro.
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('aluno')">Cadastrar Aluno</div>
+        <div class="tab" onclick="switchTab('professor')">Cadastrar Professor</div>
+    </div>
+
+    <div class="main-content">
+        <div id="aluno" class="tab-content active">
+            <div class="section">
+                <h3>Cadastrar Aluno</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nomeAluno">Nome Completo *</label>
+                        <input type="text" id="nomeAluno" placeholder="Digite o nome completo do aluno">
+                    </div>
+                    <div class="form-group">
+                        <label for="emailAluno">E-mail *</label>
+                        <input type="email" id="emailAluno" placeholder="exemplo@email.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cpfAluno">CPF *</label>
+                        <input type="text" id="cpfAluno" placeholder="000.000.000-00" maxlength="14">
+                    </div>
+                    <div class="form-group">
+                        <label for="matriculaAluno">Matrícula *</label>
+                        <input type="text" id="matriculaAluno" placeholder="Digite a matrícula do aluno">
+                    </div>
+                </div>
+
+                <button id="btnCadastrarAluno" onclick="cadastrarAluno()" class="btn-success">Cadastrar Aluno</button>
+                <div id="messageAluno"></div>
+            </div>
+        </div>
+
+        <div id="professor" class="tab-content">
+            <div class="section">
+                <h3>Cadastrar Professor</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nomeProfessor">Nome Completo *</label>
+                        <input type="text" id="nomeProfessor" placeholder="Digite o nome completo do professor">
+                    </div>
+                    <div class="form-group">
+                        <label for="emailProfessor">E-mail *</label>
+                        <input type="email" id="emailProfessor" placeholder="exemplo@email.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cpfProfessor">CPF *</label>
+                        <input type="text" id="cpfProfessor" placeholder="000.000.000-00" maxlength="14">
+                    </div>
+                    <div class="form-group">
+                        <label for="matriculaProfessor">Matrícula *</label>
+                        <input type="text" id="matriculaProfessor" placeholder="Digite a matrícula do professor">
+                    </div>
+                </div>
+
+                <button id="btnCadastrarProfessor" onclick="cadastrarProfessor()" class="btn-success">Cadastrar
+                    Professor
+                </button>
+                <div id="messageProfessor"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/usuario.js"></script>
 </body>
 </html>

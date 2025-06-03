@@ -1,280 +1,261 @@
-let endpointsAPI = {};
+let endpointsAPI = {}
 
 window.onload = function() {
-    carregarLinks();
-};
+    carregarLinks()
+}
 
 function carregarLinks() {
     fetch('/api')
         .then(response => response.json())
         .then(data => {
-            if (data._links) {
-                endpointsAPI = data._links;
-                console.log('Links carregados:', endpointsAPI);
+            if(data._links) {
+                endpointsAPI = data._links
+                console .log('Links carregados:', endpointsAPI)
             }
         })
-        .catch(error => {
-            console.error('Erro ao carregar links:', error);
-            alert('Falha ao conectar com a API. Verifique o servidor.');
-        });
+        .catch(err => {
+            console .error('Falha ao carregar links:', err)
+            alert('Não foi possível conectar à API. Verifique o servidor.')
+        })
 }
 
 function selecionarAba(aba) {
-    document.querySelectorAll('.tab').forEach(item => item.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(item => item.classList.remove('active'));
-    event.target.classList.add('active');
-    document.getElementById(aba).classList.add('active');
+    document.querySelectorAll('.tab').forEach(item => item.classList.remove('active'))
+    document.querySelectorAll('.tab-content').forEach(item => item.classList.remove('active'))
+    event.target.classList.add('active')
+    document.getElementById(aba).classList.add('active')
 }
 
-function consultarEmprestimos() {
-    const matricula = document.getElementById('matricula').value.trim();
+function consultarEmprestimos () {
+    var matricula = document.getElementById('matricula').value.trim()
 
-    if (!matricula) {
-        exibirErro('resultadosBusca', 'Informe a matrícula do usuário.');
-        return;
+    if(!matricula) {
+        exibirErro('resultadosBusca', 'Informe a matrícula do usuário.')
+        return
     }
 
-    if (!endpointsAPI['listar-emprestimos-by-matricula']) {
-        exibirErro('resultadosBusca', 'Link não disponível.');
-        return;
+    if(!endpointsAPI['listar-emprestimos-by-matricula']) {
+        exibirErro('resultadosBusca', 'Link não disponível.')
+        return
     }
 
-    exibirCarregando('resultadosBusca');
+    exibirCarregando('resultadosBusca')
 
-    const url = endpointsAPI['listar-emprestimos-by-matricula'].href.replace('{matricula}', matricula);
+    let url = endpointsAPI['listar-emprestimos-by-matricula'].href.replace('{matricula}', matricula)
 
     fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('Nenhum empréstimo para essa matrícula.');
-                } else if (response.status === 400) {
-                    throw new Error('Matrícula inválida.');
-                } else {
-                    throw new Error('Falha ao buscar empréstimos.');
-                }
+        .then(resp => {
+            if(!resp.ok) {
+                if(resp.status === 404) throw new Error('Nenhum empréstimo para essa matrícula.')
+                else if(resp.status === 400) throw new Error('Matrícula inválida.')
+                else throw new Error('Falha ao buscar empréstimos.')
             }
-            return response.json();
+            return resp.json()
         })
         .then(data => {
-            mostrarEmprestimos(data._embedded ? data._embedded.dTOListarEmprestimoList : []);
+            mostrarEmprestimos(data._embedded ? data._embedded.dTOListarEmprestimoList : [])
         })
-        .catch(error => {
-            exibirErro('resultadosBusca', error.message);
-        });
+        .catch(e => {
+            exibirErro('resultadosBusca', e.message)
+        })
 }
 
 function mostrarEmprestimos(listaEmprestimos) {
-    const container = document.getElementById('resultadosBusca');
+    const container = document.getElementById('resultadosBusca')
 
-    if (!listaEmprestimos || listaEmprestimos.length === 0) {
-        container.innerHTML = '<p class="loading">Nenhum empréstimo encontrado.</p>';
-        return;
+    if(!listaEmprestimos || listaEmprestimos.length === 0) {
+        container.innerHTML = '<p class="loading">Nenhum empréstimo encontrado.</p>'
+        return
     }
 
-    let html = '<h4>Empréstimos Encontrados:</h4><div class="results-grid">';
+    let html = '<h4>Empréstimos Encontrados:</h4><div class="results-grid">'
 
-    listaEmprestimos.forEach(emprestimo => {
-        const statusClass = emprestimo.statusEmprestimo === 'ATIVO' ? 'status-ativo' : 'status-devolvido';
+    listaEmprestimos.forEach(emp => {
+        const statusClass = emp.statusEmprestimo === 'ATIVO' ? 'status-ativo' : 'status-devolvido'
 
         html += `
            <div class="item-card emprestimo-card ${statusClass}">
                <div class="item-info">
                    <div class="info-item">
-                       <span class="info-label">Usuário:</span> ${emprestimo.nomeUsuario}
+                       <span class="info-label">Usuário:</span> ${emp.nomeUsuario}
                    </div>
                    <div class="info-item">
-                       <span class="info-label">Status:</span> ${emprestimo.statusEmprestimo}
+                       <span class="info-label">Status:</span> ${emp.statusEmprestimo}
                    </div>
                    <div class="info-item">
-                       <span class="info-label">Livro:</span> ${emprestimo.tituloLivro}
+                       <span class="info-label">Livro:</span> ${emp.tituloLivro}
                    </div>
                    <div class="info-item">
-                       <span class="info-label">Código:</span> ${emprestimo.codigoExemplar}
+                       <span class="info-label">Código:</span> ${emp.codigoExemplar}
                    </div>
                    <div class="info-item">
-                       <span class="info-label">Data Empréstimo:</span> ${formatarDataBR(emprestimo.dataEmprestimo)}
+                       <span class="info-label">Data Empréstimo:</span> ${formatarDataBR(emp.dataEmprestimo)}
                    </div>
                    <div class="info-item">
-                       <span class="info-label">Data Prevista:</span> ${formatarDataBR(emprestimo.dataPrevista)}
+                       <span class="info-label">Data Prevista:</span> ${formatarDataBR(emp.dataPrevista)}
                    </div>
                </div>
-               <button onclick="detalhesEmprestimo('${emprestimo._links['emprestimo-especifico'].href}')">Ver Detalhes</button>
+               <button onclick="detalhesEmprestimo('${emp._links['emprestimo-especifico'].href}')">Ver Detalhes</button>
            </div>
-       `;
-    });
+       `
+    })
 
-    html += '</div>';
-    container.innerHTML = html;
+    html += '</div>'
+    container.innerHTML = html
 }
 
 function detalhesEmprestimo(url) {
     fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Falha ao buscar detalhes.');
-            }
-            return response.json();
+        .then(res => {
+            if(!res.ok) throw new Error('Falha ao buscar detalhes.')
+            return res.json()
         })
-        .then(data => {
+        .then(dado => {
             alert(`Detalhes:
 
-Usuário: ${data.nomeUsuario}
-Matrícula: ${data.matricula}
-Livro: ${data.titulo}
-Autor: ${data.autor}
-ISBN: ${data.isbn}
-Ano: ${data.ano}
-Editora: ${data.editora}
-Código Exemplar: ${data.codigoExemplar}
-Data Empréstimo: ${formatarDataBR(data.dataEmprestimo)}
-Data Prevista: ${formatarDataBR(data.dataPrevista)}
-Data Devolução: ${data.dataDevolucao ? formatarDataBR(data.dataDevolucao) : 'Não devolvido'}
-Status: ${data.statusEmprestimo}`);
+Usuário: ${dado.nomeUsuario}
+Matrícula: ${dado.matricula}
+Livro: ${dado.titulo}
+Autor: ${dado.autor}
+ISBN: ${dado.isbn}
+Ano: ${dado.ano}
+Editora: ${dado.editora}
+Código Exemplar: ${dado.codigoExemplar}
+Data Empréstimo: ${formatarDataBR(dado.dataEmprestimo)}
+Data Prevista: ${formatarDataBR(dado.dataPrevista)}
+Data Devolução: ${dado.dataDevolucao ? formatarDataBR(dado.dataDevolucao) : 'Não devolvido'}
+Status: ${dado.statusEmprestimo}`)
         })
-        .catch(error => {
-            alert('Falha ao carregar detalhes: ' + error.message);
-        });
+        .catch(err => {
+            alert('Falha ao carregar detalhes: ' + err.message)
+        })
 }
 
 function criarEmprestimo() {
-    const matricula       = document.getElementById('matriculaEmprestimo').value.trim();
-    const codigo          = document.getElementById('codigoExemplar').value.trim();
-    const dataPrevista    = document.getElementById('dataPrevista').value;
-    const tipoUsuario     = document.getElementById('tipoUsuario').value;
+    var matriculaEmp = document.getElementById('matriculaEmprestimo').value.trim()
+    var codigo = document.getElementById('codigoExemplar').value.trim()
+    var dataPrev = document.getElementById('dataPrevista').value
+    var tipoUsu = document.getElementById('tipoUsuario').value
 
-    if (!matricula || !codigo || !dataPrevista || !tipoUsuario) {
-        exibirErro('resultadoEmprestimo', 'Preencha todos os campos.');
-        return;
+    if(!matriculaEmp || !codigo || !dataPrev || !tipoUsu) {
+        exibirErro('resultadoEmprestimo', 'Preencha todos os campos.')
+        return
     }
 
-    const linkRealizar = endpointsAPI['realizar-emprestimo'];
-    if (!linkRealizar) {
-        exibirErro('resultadoEmprestimo', 'Link não disponível.');
-        return;
+    const linkRealizar = endpointsAPI['realizar-emprestimo']
+    if(!linkRealizar) {
+        exibirErro('resultadoEmprestimo', 'Link não disponível.')
+        return
     }
 
-    const novoEmprestimo = {
+    let novoEmp = {
         codigoExemplar: codigo,
-        matricula:      matricula,
-        dataPrevista:   dataPrevista,
-        tipoUsuario:    tipoUsuario
-    };
+        matricula: matriculaEmp,
+        dataPrevista: dataPrev,
+        tipoUsuario: tipoUsu
+    }
 
-    exibirCarregando('resultadoEmprestimo');
+    exibirCarregando('resultadoEmprestimo')
 
     fetch(linkRealizar.href, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(novoEmprestimo)
+        body: JSON.stringify(novoEmp)
     })
         .then(response => {
-            // Primeiro, verificamos se houve erro HTTP (4xx, 5xx)
-            if (!response.ok) {
-                if (response.status === 400) {
-                    throw new Error('Dados inválidos.');
-                } else if (response.status === 500) {
-                    throw new Error('Erro interno do servidor.');
-                } else {
-                    throw new Error('Falha ao realizar empréstimo.');
-                }
+            if(!response.ok) {
+                if(response.status === 400) throw new Error('Dados inválidos.')
+                else if(response.status === 500) throw new Error('Erro interno do servidor.')
+                else throw new Error('Falha ao realizar empréstimo.')
             }
-
-            // Se chegou aqui, é HTTP 200 - precisamos verificar o JSON
-            return response.json();
+            return response.json()
         })
-        .then(data => {
-            console.log('Resposta da API (criarEmprestimo):', data);
+        .then(respData => {
+            console .log('Resposta da API (criarEmprestimo):', respData)
 
-            // Normalizar o campo sucesso para boolean
-            const sucesso = (typeof data.sucesso === 'boolean')
-                ? data.sucesso
-                : (data.sucesso === 'true' || data.sucesso === true || data.sucesso === '1');
+            const sucesso = (typeof respData.sucesso === 'boolean')
+                ? respData.sucesso
+                : (respData.sucesso === 'true' || respData.sucesso === true || respData.sucesso === '1')
 
-            if (sucesso) {
-                // Empréstimo realizado com sucesso
-                exibirSucesso('resultadoEmprestimo', 'Empréstimo efetuado com sucesso!');
-                resetFormEmprestimo();
+            if(sucesso) {
+                exibirSucesso('resultadoEmprestimo', 'Empréstimo efetuado com sucesso!')
+                resetFormEmprestimo()
             } else {
-                // Empréstimo não foi realizado - verificar se há pendências
-                if (Array.isArray(data.emprestimosPendentes) && data.emprestimosPendentes.length > 0) {
-                    exibirPendenciasEmprestimo(data.emprestimosPendentes);
+                if(Array.isArray(respData.emprestimosPendentes) && respData.emprestimosPendentes.length > 0) {
+                    exibirPendenciasEmprestimo(respData.emprestimosPendentes)
                 } else {
-                    // Falha sem pendências específicas (ex: livro já emprestado para o usuário)
-                    exibirErro('resultadoEmprestimo', 'Não foi possível realizar o empréstimo. Verifique os dados informados.');
+                    exibirErro('resultadoEmprestimo', 'Não foi possível realizar o empréstimo. Verifique os dados informados.')
                 }
             }
         })
-        .catch(error => {
-            console.error('Erro na requisição:', error);
-            exibirErro('resultadoEmprestimo', error.message || 'Erro desconhecido.');
-        });
+        .catch(err => {
+            console .error('Erro na requisição:', err)
+            exibirErro('resultadoEmprestimo', err.message || 'Erro desconhecido.')
+        })
 }
 
+function exibirPendenciasEmprestimo(pendentes) {
+    var container = document.getElementById('resultadoEmprestimo')
 
-function exibirPendenciasEmprestimo(emprestimosPendentes) {
-    const container = document.getElementById('resultadoEmprestimo');
+    let html = '<div class="error"><h4>Empréstimo não realizado!</h4>'
+    html += '<p>O usuário possui as seguintes pendências:</p>'
+    html += '<div class="pendencias-grid">'
 
-    let html = '<div class="error"><h4>Empréstimo não realizado!</h4>';
-    html += '<p>O usuário possui as seguintes pendências:</p>';
-    html += '<div class="pendencias-grid">';
-
-    emprestimosPendentes.forEach(emprestimo => {
-        const statusClass = emprestimo.statusEmprestimo === 'ATIVO' ? 'status-ativo' : 'status-devolvido';
-        const isAtrasado = emprestimo.statusEmprestimo === 'ATIVO' &&
-            new Date(emprestimo.dataPrevista) < new Date();
+    pendentes.forEach(emp => {
+        const statusClass = emp.statusEmprestimo === 'ATIVO' ? 'status-ativo' : 'status-devolvido'
+        const isAtras = emp.statusEmprestimo === 'ATIVO' &&
+            new Date(emp.dataPrevista) < new Date()
 
         html += `
-            <div class="pendencia-card ${statusClass} ${isAtrasado ? 'atrasado' : ''}">
+            <div class="pendencia-card ${statusClass} ${isAtras ? 'atrasado' : ''}">
                 <div class="pendencia-info">
                     <div class="info-item">
-                        <span class="info-label">Livro:</span> ${emprestimo.tituloLivro}
+                        <span class="info-label">Livro:</span> ${emp.tituloLivro}
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Código:</span> ${emprestimo.codigoExemplar}
+                        <span class="info-label">Código:</span> ${emp.codigoExemplar}
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Data Empréstimo:</span> ${formatarDataBR(emprestimo.dataEmprestimo)}
+                        <span class="info-label">Data Empréstimo:</span> ${formatarDataBR(emp.dataEmprestimo)}
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Data Prevista:</span> ${formatarDataBR(emprestimo.dataPrevista)}
+                        <span class="info-label">Data Prevista:</span> ${formatarDataBR(emp.dataPrevista)}
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Status:</span> ${emprestimo.statusEmprestimo}
-                        ${isAtrasado ? ' <span class="texto-atrasado">(ATRASADO)</span>' : ''}
+                        <span class="info-label">Status:</span> ${emp.statusEmprestimo} ${isAtras ? ' <span class="texto-atrasado">(ATRASADO)</span>' : ''}
                     </div>
                 </div>
             </div>
-        `;
-    });
+        `
+    })
 
-    html += '</div>';
-    html += '<p><strong>Regularize as pendências antes de realizar um novo empréstimo.</strong></p>';
-    html += '</div>';
+    html += '</div>'
+    html += '<p><strong>Regularize as pendências antes de realizar um novo empréstimo.</strong></p>'
+    html += '</div>'
 
-    container.innerHTML = html;
+    container.innerHTML = html
 }
 
 function processarDevolucao() {
-    const matricula = document.getElementById('matriculaDevolucao').value.trim();
-    const codigo = document.getElementById('codigoExemplarDevolucao').value.trim();
-    const tipoUsuario = document.getElementById('tipoUsuarioDevolucao').value;
+    var matricula = document.getElementById('matriculaDevolucao').value.trim()
+    var codigo = document.getElementById('codigoExemplarDevolucao').value.trim()
+    var tipoUsuario = document.getElementById('tipoUsuarioDevolucao').value
 
-    if (!matricula || !codigo || !tipoUsuario) {
-        exibirErro('resultadoDevolucao', 'Preencha todos os campos.');
-        return;
+    if(!matricula || !codigo || !tipoUsuario) {
+        exibirErro('resultadoDevolucao', 'Preencha todos os campos.')
+        return
     }
 
-    if (!endpointsAPI['realizar-devolucao']) {
-        exibirErro('resultadoDevolucao', 'Link não disponível.');
-        return;
+    if(!endpointsAPI['realizar-devolucao']) {
+        exibirErro('resultadoDevolucao', 'Link não disponível.')
+        return
     }
 
-    const dadosRetorno = {
+    let dadosRetorno = {
         codigoExemplar: codigo,
         matricula: matricula,
         tipoUsuario: tipoUsuario
-    };
+    }
 
     fetch(endpointsAPI['realizar-devolucao'].href, {
         method: 'POST',
@@ -283,52 +264,49 @@ function processarDevolucao() {
         },
         body: JSON.stringify(dadosRetorno)
     })
-        .then(response => {
-            if (!response.ok) {
-                if (response.status === 400) {
-                    throw new Error('Dados inválidos.');
-                } else {
-                    throw new Error('Falha ao processar devolução.');
-                }
+        .then(res => {
+            if(!res.ok) {
+                if(res.status === 400) throw new Error('Dados inválidos.')
+                else throw new Error('Falha ao processar devolução.')
             }
-            exibirSucesso('resultadoDevolucao', 'Devolução realizada com sucesso!');
-            resetFormDevolucao();
+            exibirSucesso('resultadoDevolucao', 'Devolução realizada com sucesso!')
+            resetFormDevolucao()
         })
-        .catch(error => {
-            exibirErro('resultadoDevolucao', error.message);
-        });
+        .catch(err => {
+            exibirErro('resultadoDevolucao', err.message)
+        })
 }
 
 function exibirErro(containerId, mensagem) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = `<div class="error">${mensagem}</div>`;
+    const container = document.getElementById(containerId)
+    container.innerHTML = `<div class="error">${mensagem}</div>`
 }
 
 function exibirSucesso(containerId, mensagem) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = `<div class="success">${mensagem}</div>`;
+    const container = document.getElementById(containerId)
+    container.innerHTML = `<div class="success">${mensagem}</div>`
 }
 
 function exibirCarregando(containerId) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = '<div class="loading">Carregando...</div>';
+    const container = document.getElementById(containerId)
+    container.innerHTML = '<div class="loading">Carregando...</div>'
 }
 
 function formatarDataBR(dataString) {
-    if (!dataString) return 'N/A';
-    const data = new Date(dataString);
-    return data.toLocaleDateString('pt-BR');
+    if(!dataString) return 'N/A'
+    const data = new Date(dataString)
+    return data.toLocaleDateString('pt-BR')
 }
 
 function resetFormEmprestimo() {
-    document.getElementById('matriculaEmprestimo').value = '';
-    document.getElementById('codigoExemplar').value = '';
-    document.getElementById('dataPrevista').value = '';
-    document.getElementById('tipoUsuario').value = '';
+    document.getElementById('matriculaEmprestimo').value = ''
+    document.getElementById('codigoExemplar').value = ''
+    document.getElementById('dataPrevista').value = ''
+    document.getElementById('tipoUsuario').value = ''
 }
 
 function resetFormDevolucao() {
-    document.getElementById('matriculaDevolucao').value = '';
-    document.getElementById('codigoExemplarDevolucao').value = '';
-    document.getElementById('tipoUsuarioDevolucao').value = '';
+    document.getElementById('matriculaDevolucao').value = ''
+    document.getElementById('codigoExemplarDevolucao').value = ''
+    document.getElementById('tipoUsuarioDevolucao').value = ''
 }

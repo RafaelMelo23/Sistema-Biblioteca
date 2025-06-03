@@ -7,8 +7,8 @@ VALUES (1, 'Rafael Silva', '12345678901', 'rafael@email.com'),
 
  --Alunos (cada aluno tem id, nome, cpf, email, matricula)
  INSERT INTO aluno (id, nome, cpf, email, matricula)
- VALUES (1, 'Rafael Silva', '12345678901', 'rafael@email.com', 'MAT20230001'),
-        (2, 'Maria Oliveira', '23456789012', 'maria@email.com', 'MAT20230002');
+ VALUES (51, 'Rafael Silva', '12345678901', 'rafael@email.com', 'MAT20230001'),
+        (52, 'Maria Oliveira', '23456789012', 'maria@email.com', 'MAT20230002');
 
  -- Professores (cada professor tem id, nome, cpf, email, matricula)
  INSERT INTO professor (id, nome, cpf, email, matricula)
@@ -24,7 +24,7 @@ VALUES (1, 'Rafael Silva', '12345678901', 'rafael@email.com'),
  INSERT INTO exemplar_livro (id, livro_id, codigo_exemplar, status_exemplar)
  VALUES (13, 12, 'EXEMP001', 'DISPONIVEL'),
         (23, 12, 'EXEMP002', 'EMPRESTADO'),
-        (33, 22, 'EXEMP003', 'DISPONIVEL');
+        (33, 22, 'EXEMP003', 'EMPRESTADO');
 
  --INSERT INTO emprestimo (id, exemplar_livro_id, matricula_id, data_emprestimo, data_entrega_prevista,
  --                        data_entrega_factual, status_emprestimo)
