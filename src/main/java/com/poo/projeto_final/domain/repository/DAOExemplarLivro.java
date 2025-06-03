@@ -43,4 +43,9 @@ public interface DAOExemplarLivro extends ListCrudRepository<ExemplarLivro, Long
             @Param("status") StatusExemplar status
     );
 
+    @Modifying
+    @Query("UPDATE ExemplarLivro ex SET ex.statusExemplar = :statusExemplar WHERE ex.id IN :exemplarId")
+    void alterarStatusExemplar(@Param("exemplarId") List<Long> exemplarId,
+                               @Param("statusExemplar") StatusExemplar status);
+
 }

@@ -1,10 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Biblioteca - Livros</title>
+    <link href="/css/livro.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div class="container">
+    <div class="navigation">
+        <h3>Sistema de Biblioteca</h3>
+        <div class="nav-links">
+            <a href="#emprestimos">Empréstimos</a>
+            <a href="#usuarios">Usuários</a>
+        </div>
+    </div>
 
+    <div class="header">
+        <h1>Gerenciamento de Livros</h1>
+        <p>Cadastre novos livros e gerencie o acervo da biblioteca</p>
+    </div>
+
+    <div class="disclaimer">
+        <strong>Importante:</strong> Todos os campos são obrigatórios para o cadastro de novos livros. Verifique se as
+        informações estão corretas antes de enviar.
+    </div>
+
+    <div class="main-content">
+        <div class="section">
+            <h3>Cadastrar Novo Livro</h3>
+            <form id="formulario-cadastro-livro">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="titulo">Título do Livro</label>
+                        <input type="text" id="titulo" name="titulo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="autor">Autor</label>
+                        <input type="text" id="autor" name="autor" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="isbn">ISBN</label>
+                        <input type="text" id="isbn" name="isbn" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ano">Ano de Publicação</label>
+                        <input type="number" id="ano" name="ano" min="1000" max="2025" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editora">Editora</label>
+                        <input type="text" id="editora" name="editora" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantidade">Quantidade de Exemplares</label>
+                        <input type="number" id="quantidade" name="quantidade" min="1" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-success">Cadastrar Livro</button>
+            </form>
+            <div id="mensagem-cadastro"></div>
+        </div>
+
+        <div class="section">
+            <h3>Buscar Livros</h3>
+            <div class="form-group">
+                <label for="busca-titulo">Buscar por Título</label>
+                <input type="text" id="busca-titulo" placeholder="Digite o título do livro">
+            </div>
+            <button id="btn-buscar" class="btn-info">Buscar</button>
+            <div id="mensagem-busca"></div>
+        </div>
+    </div>
+
+    <div class="results" id="resultados-busca" style="display: none;">
+        <h4>Resultados da Busca</h4>
+        <div class="results-grid" id="lista-livros"></div>
+    </div>
+</div>
+<script src="/js/livro.js"></script>
 </body>
 </html>

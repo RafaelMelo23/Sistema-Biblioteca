@@ -3,10 +3,12 @@ package com.poo.projeto_final.api.controller.emprestimo;
 import com.poo.projeto_final.application.dto.DTOEmprestimo;
 import com.poo.projeto_final.application.dto.DTOListagemCompleta;
 import com.poo.projeto_final.application.dto.DTOListarEmprestimo;
+import com.poo.projeto_final.application.dto.DTOResultadoEmprestimo;
 import com.poo.projeto_final.application.usecase.emprestimo.DevolucaoEmprestimoUseCase;
 import com.poo.projeto_final.application.usecase.emprestimo.ListarEmprestimoPorIdUseCase;
 import com.poo.projeto_final.application.usecase.emprestimo.ListarEmprestimosUseCase;
 import com.poo.projeto_final.application.usecase.emprestimo.RealizarEmprestimoUseCase;
+import com.poo.projeto_final.domain.service.EmprestimoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -34,12 +36,14 @@ public class EmprestimoController {
     private final RealizarEmprestimoUseCase realizarEmprestimoUseCase;
     private final DevolucaoEmprestimoUseCase devolucaoEmprestimoUseCase;
     private final ListarEmprestimoPorIdUseCase listarEmprestimoPorIdUseCase;
+    private final EmprestimoService emprestimoService;
 
-    public EmprestimoController(ListarEmprestimosUseCase listarEmprestimosUseCase, RealizarEmprestimoUseCase realizarEmprestimoUseCase, DevolucaoEmprestimoUseCase devolucaoEmprestimoUseCase, ListarEmprestimoPorIdUseCase listarEmprestimoPorIdUseCase) {
+    public EmprestimoController(ListarEmprestimosUseCase listarEmprestimosUseCase, RealizarEmprestimoUseCase realizarEmprestimoUseCase, DevolucaoEmprestimoUseCase devolucaoEmprestimoUseCase, ListarEmprestimoPorIdUseCase listarEmprestimoPorIdUseCase, EmprestimoService emprestimoService) {
         this.listarEmprestimosUseCase = listarEmprestimosUseCase;
         this.realizarEmprestimoUseCase = realizarEmprestimoUseCase;
         this.devolucaoEmprestimoUseCase = devolucaoEmprestimoUseCase;
         this.listarEmprestimoPorIdUseCase = listarEmprestimoPorIdUseCase;
+        this.emprestimoService = emprestimoService;
     }
 
     @Operation(summary = "Listar todos os empréstimos de um usuário")
@@ -62,6 +66,8 @@ public class EmprestimoController {
         } catch (IllegalArgumentException e) {
             logger.error("Erro de argumento ao listar empréstimos para matrícula {}: {}", matricula, e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não foi encontrado empréstimos com a matrícula informada");
+        } catch (ResponseStatusException e){
+            throw e;
         } catch (Exception e) {
             logger.error("Erro interno ao listar empréstimos para matrícula {}: {}", matricula, e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Houve um erro ao listar empréstimos");
@@ -86,6 +92,8 @@ public class EmprestimoController {
         } catch (IllegalArgumentException e) {
             logger.error("ID inválido fornecido: {} - {}", id, e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw e;
         } catch (Exception e) {
             logger.error("Erro interno ao buscar empréstimo com ID {}: {}", id, e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -93,14 +101,13 @@ public class EmprestimoController {
     }
 
     @Operation(summary = "Efetuar um empréstimo")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Empréstimo realizado com sucesso"), @ApiResponse(responseCode = "400", description = "Dados inválidos"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Empréstimo realizado com sucesso"), @ApiResponse(responseCode = "400", description = "Dados inválidos"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
     @PostMapping("/efetuar")
-    public ResponseEntity<?> efetuarEmprestimo(@RequestBody DTOEmprestimo dtoEmprestimo) {
+    public ResponseEntity<DTOResultadoEmprestimo> efetuarEmprestimo(@RequestBody DTOEmprestimo dtoEmprestimo) {
 
         try {
-            realizarEmprestimoUseCase.executarEmprestimo(dtoEmprestimo);
+            return ResponseEntity.ok(realizarEmprestimoUseCase.executarEmprestimo(dtoEmprestimo));
 
-            return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             logger.error("Erro de argumento ao efetuar empréstimo: {}", e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

@@ -11,8 +11,16 @@ import lombok.Getter;
 @Getter
 public class UsuarioBiblioteca {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(
+            name = "usuario_bibl_sequence",
+            sequenceName = "USUARIO_BIBL_SEQUENCE",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "usuario_bibl_sequence")
     @Column(name = "id", nullable = false)
     private Long id;
 

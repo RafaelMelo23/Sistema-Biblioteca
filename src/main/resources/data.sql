@@ -17,16 +17,36 @@ VALUES (1, 'Rafael Silva', '12345678901', 'rafael@email.com'),
 
  --Livros
  INSERT INTO livro (id, titulo, autor, isbn, ano, editora)
- VALUES (1, 'Programação Java', 'José da Silva', '9788575224177', '2020', 'Editora Alfa'),
-        (2, 'Banco de Dados', 'Maria Souza', '9788575224184', '2018', 'Editora Beta');
+ VALUES (12, 'Programação Java', 'José da Silva', '9788575224177', '2020', 'Editora Alfa'),
+        (22, 'Banco de Dados', 'Maria Souza', '9788575224184', '2018', 'Editora Beta');
 
  -- Exemplares de livros
  INSERT INTO exemplar_livro (id, livro_id, codigo_exemplar, status_exemplar)
- VALUES (1, 1, 'EXEMP001', 'DISPONIVEL'),
-        (2, 1, 'EXEMP002', 'EMPRESTADO'),
-        (3, 2, 'EXEMP003', 'DISPONIVEL');
+ VALUES (13, 12, 'EXEMP001', 'DISPONIVEL'),
+        (23, 12, 'EXEMP002', 'EMPRESTADO'),
+        (33, 22, 'EXEMP003', 'DISPONIVEL');
 
  --INSERT INTO emprestimo (id, exemplar_livro_id, matricula_id, data_emprestimo, data_entrega_prevista,
  --                        data_entrega_factual, status_emprestimo)
  --VALUES (1, 2, 'MAT20230001', DATE '2025-05-01', DATE '2025-05-15', NULL, 'ATIVO'),
  --       (2, 3, 'MAT20230002', DATE '2025-04-20', DATE '2025-05-04', DATE '2025-05-03', 'FINALIZADO');
+
+INSERT INTO emprestimo (
+    id,
+    exemplar_livro_id,
+    matricula_id,
+    data_emprestimo,
+    data_entrega_prevista,
+    data_entrega_factual,
+    status_emprestimo
+)
+VALUES (
+           3,                     -- id (ajusta se necessário)
+           33,                     -- exemplar_livro_id (ajusta se necessário)
+           'MAT20230001',          -- matrícula do usuário
+           DATE '2025-05-20',     -- data do empréstimo (exemplo: 20 de maio)
+           DATE '2025-05-29',     -- data de entrega prevista (há 5 dias do dia atual)
+           NULL,                  -- ainda não foi entregue
+           'ATRASADO'             -- status atual
+       );
+

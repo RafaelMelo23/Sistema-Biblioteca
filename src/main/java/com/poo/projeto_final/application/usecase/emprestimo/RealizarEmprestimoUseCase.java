@@ -1,6 +1,7 @@
 package com.poo.projeto_final.application.usecase.emprestimo;
 
 import com.poo.projeto_final.application.dto.DTOEmprestimo;
+import com.poo.projeto_final.application.dto.DTOResultadoEmprestimo;
 import com.poo.projeto_final.domain.service.EmprestimoService;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +17,8 @@ public class RealizarEmprestimoUseCase {
         this.servicoEmprestimo = servicoEmprestimo;
     }
 
-    public void executarEmprestimo(DTOEmprestimo dtoEmprestimo) {
+    public DTOResultadoEmprestimo executarEmprestimo(DTOEmprestimo dtoEmprestimo) {
 
-        servicoEmprestimo.registrarEmprestimo(dtoEmprestimo);
+        return servicoEmprestimo.registrarEmprestimo(dtoEmprestimo);
     }
 }

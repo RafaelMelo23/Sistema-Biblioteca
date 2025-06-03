@@ -138,49 +138,121 @@ Status: ${data.statusEmprestimo}`);
 }
 
 function criarEmprestimo() {
-    const matricula = document.getElementById('matriculaEmprestimo').value.trim();
-    const codigo = document.getElementById('codigoExemplar').value.trim();
-    const dataPrevista = document.getElementById('dataPrevista').value;
-    const tipoUsuario = document.getElementById('tipoUsuario').value;
+    const matricula       = document.getElementById('matriculaEmprestimo').value.trim();
+    const codigo          = document.getElementById('codigoExemplar').value.trim();
+    const dataPrevista    = document.getElementById('dataPrevista').value;
+    const tipoUsuario     = document.getElementById('tipoUsuario').value;
 
     if (!matricula || !codigo || !dataPrevista || !tipoUsuario) {
         exibirErro('resultadoEmprestimo', 'Preencha todos os campos.');
         return;
     }
 
-    if (!endpointsAPI['realizar-emprestimo']) {
+    const linkRealizar = endpointsAPI['realizar-emprestimo'];
+    if (!linkRealizar) {
         exibirErro('resultadoEmprestimo', 'Link não disponível.');
         return;
     }
 
     const novoEmprestimo = {
         codigoExemplar: codigo,
-        matricula: matricula,
-        dataPrevista: dataPrevista,
-        tipoUsuario: tipoUsuario
+        matricula:      matricula,
+        dataPrevista:   dataPrevista,
+        tipoUsuario:    tipoUsuario
     };
 
-    fetch(endpointsAPI['realizar-emprestimo'].href, {
+    exibirCarregando('resultadoEmprestimo');
+
+    fetch(linkRealizar.href, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(novoEmprestimo)
     })
         .then(response => {
+            // Primeiro, verificamos se houve erro HTTP (4xx, 5xx)
             if (!response.ok) {
                 if (response.status === 400) {
                     throw new Error('Dados inválidos.');
+                } else if (response.status === 500) {
+                    throw new Error('Erro interno do servidor.');
                 } else {
                     throw new Error('Falha ao realizar empréstimo.');
                 }
             }
-            exibirSucesso('resultadoEmprestimo', 'Empréstimo efetuado com sucesso!');
-            resetFormEmprestimo();
+
+            // Se chegou aqui, é HTTP 200 - precisamos verificar o JSON
+            return response.json();
+        })
+        .then(data => {
+            console.log('Resposta da API (criarEmprestimo):', data);
+
+            // Normalizar o campo sucesso para boolean
+            const sucesso = (typeof data.sucesso === 'boolean')
+                ? data.sucesso
+                : (data.sucesso === 'true' || data.sucesso === true || data.sucesso === '1');
+
+            if (sucesso) {
+                // Empréstimo realizado com sucesso
+                exibirSucesso('resultadoEmprestimo', 'Empréstimo efetuado com sucesso!');
+                resetFormEmprestimo();
+            } else {
+                // Empréstimo não foi realizado - verificar se há pendências
+                if (Array.isArray(data.emprestimosPendentes) && data.emprestimosPendentes.length > 0) {
+                    exibirPendenciasEmprestimo(data.emprestimosPendentes);
+                } else {
+                    // Falha sem pendências específicas (ex: livro já emprestado para o usuário)
+                    exibirErro('resultadoEmprestimo', 'Não foi possível realizar o empréstimo. Verifique os dados informados.');
+                }
+            }
         })
         .catch(error => {
-            exibirErro('resultadoEmprestimo', error.message);
+            console.error('Erro na requisição:', error);
+            exibirErro('resultadoEmprestimo', error.message || 'Erro desconhecido.');
         });
+}
+
+
+function exibirPendenciasEmprestimo(emprestimosPendentes) {
+    const container = document.getElementById('resultadoEmprestimo');
+
+    let html = '<div class="error"><h4>Empréstimo não realizado!</h4>';
+    html += '<p>O usuário possui as seguintes pendências:</p>';
+    html += '<div class="pendencias-grid">';
+
+    emprestimosPendentes.forEach(emprestimo => {
+        const statusClass = emprestimo.statusEmprestimo === 'ATIVO' ? 'status-ativo' : 'status-devolvido';
+        const isAtrasado = emprestimo.statusEmprestimo === 'ATIVO' &&
+            new Date(emprestimo.dataPrevista) < new Date();
+
+        html += `
+            <div class="pendencia-card ${statusClass} ${isAtrasado ? 'atrasado' : ''}">
+                <div class="pendencia-info">
+                    <div class="info-item">
+                        <span class="info-label">Livro:</span> ${emprestimo.tituloLivro}
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Código:</span> ${emprestimo.codigoExemplar}
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Data Empréstimo:</span> ${formatarDataBR(emprestimo.dataEmprestimo)}
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Data Prevista:</span> ${formatarDataBR(emprestimo.dataPrevista)}
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status:</span> ${emprestimo.statusEmprestimo}
+                        ${isAtrasado ? ' <span class="texto-atrasado">(ATRASADO)</span>' : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    html += '</div>';
+    html += '<p><strong>Regularize as pendências antes de realizar um novo empréstimo.</strong></p>';
+    html += '</div>';
+
+    container.innerHTML = html;
 }
 
 function processarDevolucao() {

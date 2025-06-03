@@ -11,4 +11,14 @@ public class HtmlController {
         return "redirect:/index.html";
     }
 
+    @GetMapping("/livro")
+    public String paginaLivro() {
+        return "redirect:/livro.html";
+    }
+
+    @GetMapping("/usuario")
+    public String paginaUsuario() {
+        return "redirect:/usuario.html";
+    }
+
 }
