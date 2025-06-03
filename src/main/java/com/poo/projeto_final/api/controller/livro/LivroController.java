@@ -90,8 +90,14 @@ public class LivroController {
             Link exemplaresDisponiveis = linkTo(methodOn(LivroController.class)
                     .buscarLivros(livro.getId(), StatusExemplar.DISPONIVEL))
                     .withRel("exemplares-disponiveis");
+            Link exemplaresEmprestados = linkTo(methodOn(LivroController.class)
+                    .buscarLivros(livro.getId(), StatusExemplar.EMPRESTADO))
+                    .withRel("exemplares-emprestados");
+            Link exemplaresPerdidos = linkTo(methodOn(LivroController.class)
+                    .buscarLivros(livro.getId(), StatusExemplar.PERDIDO))
+                    .withRel("exemplares-perdidos");
 
-            recurso.add(exemplaresDisponiveis);
+            recurso.add(exemplaresDisponiveis, exemplaresEmprestados, exemplaresPerdidos);
 
             return recurso;
         }).toList();
