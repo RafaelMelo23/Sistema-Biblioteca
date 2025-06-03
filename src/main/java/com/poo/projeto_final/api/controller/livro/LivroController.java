@@ -63,7 +63,7 @@ public class LivroController {
 
     @Operation(summary = "Buscar exemplares de um livro por status")
     @ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Lista de exemplares retornada com sucesso",
+            @ApiResponse(responseCode = "200", description = "Lista de exemplares retornada com sucesso",
                     content = @Content(schema = @Schema(implementation = DTOExemplarLivro.class)))
     })
     @GetMapping("/buscar/exemplares")
@@ -80,7 +80,7 @@ public class LivroController {
     })
     @GetMapping("/buscar/titulo")
     public CollectionModel<EntityModel<Livro>> buscarPorTituloContem(@Parameter(description = "Parte do título a ser buscada")
-                                                                         @RequestParam String titulo) {
+                                                                     @RequestParam String titulo) {
 
         List<Livro> livros = buscaLivroPorTituloUseCase.buscaLivroPorTituloContem(titulo);
 
@@ -104,7 +104,6 @@ public class LivroController {
 
         return CollectionModel.of(livrosComLinks);
     }
-
 
 
 }

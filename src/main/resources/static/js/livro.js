@@ -34,7 +34,7 @@ async function cadastrarLivro(dadosLivro) {
         if (!apiLinks['criar-livro']) throw new Error('Link da API não encontrado');
         const response = await fetch(apiLinks['criar-livro'].href, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(dadosLivro)
         });
         if (response.ok) {
