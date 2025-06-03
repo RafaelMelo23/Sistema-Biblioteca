@@ -3,7 +3,6 @@ package com.poo.projeto_final.api.controller;
 import com.poo.projeto_final.api.controller.emprestimo.EmprestimoController;
 import com.poo.projeto_final.api.controller.livro.LivroController;
 import com.poo.projeto_final.api.controller.usuario.UsuarioController;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

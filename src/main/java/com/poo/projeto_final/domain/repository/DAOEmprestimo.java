@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -83,8 +84,8 @@ public interface DAOEmprestimo extends ListCrudRepository<Emprestimo, Long> {
                                     FROM Emprestimo emp
                                     WHERE emp.statusEmprestimo = :statusEmprestimo
                                     AND emp.dataPrevista <= :data
-                                    AND emp.dataFactual = null""")
-    List<DTOEmprestimoAtrasado> emprestimosAtrasados(@Param("data") Date dataReferencia,
+                                    AND emp.dataFactual IS NULL""")
+    List<DTOEmprestimoAtrasado> emprestimosAtrasados(@Param("data") LocalDate dataReferencia,
                                                      @Param("statusEmprestimo") StatusEmprestimo status);
 
     @Modifying

@@ -1,6 +1,9 @@
 package com.poo.projeto_final.domain.service;
 
-import com.poo.projeto_final.application.dto.*;
+import com.poo.projeto_final.application.dto.DTOEmprestimo;
+import com.poo.projeto_final.application.dto.DTOEmprestimoAtrasado;
+import com.poo.projeto_final.application.dto.DTOListarEmprestimo;
+import com.poo.projeto_final.application.dto.DTOResultadoEmprestimo;
 import com.poo.projeto_final.domain.enums.StatusEmprestimo;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.aluno.Aluno;
@@ -11,6 +14,7 @@ import com.poo.projeto_final.domain.repository.DAOAluno;
 import com.poo.projeto_final.domain.repository.DAOEmprestimo;
 import com.poo.projeto_final.domain.repository.DAOExemplarLivro;
 import com.poo.projeto_final.domain.repository.DAOProfessor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -28,6 +31,7 @@ import java.util.List;
  * Serviço responsável pela lógica de negócio relacionada aos empréstimos, validações e comunicação com o banco.
  */
 @Service
+@RequiredArgsConstructor
 public class EmprestimoService {
 
     private final DAOAluno daoAluno;
@@ -35,13 +39,6 @@ public class EmprestimoService {
     private final DAOProfessor daoProfessor;
     private final DAOEmprestimo daoEmprestimo;
     Logger logger = LoggerFactory.getLogger(EmprestimoService.class);
-
-    public EmprestimoService(DAOAluno daoAluno, DAOExemplarLivro daoExemplarLivro, DAOProfessor daoProfessor, DAOEmprestimo daoEmprestimo) {
-        this.daoAluno = daoAluno;
-        this.daoExemplarLivro = daoExemplarLivro;
-        this.daoProfessor = daoProfessor;
-        this.daoEmprestimo = daoEmprestimo;
-    }
 
     /**
      * Realiza um empréstimo com base no DTO (Data Transfer Object) recebido.
@@ -154,15 +151,16 @@ public class EmprestimoService {
     /**
      * Método para atualizar os status de empréstimos ainda não entregues há 5 dias para atrasado/perdido, é utilizado dentro de um @Scheduled, para rodar periodicamente meia noite diariamente.
      */
+    @Transactional
     public void executarEmprestimoAtrasado() {
 
-        Date dataAtualMenosCinco = Date.from(
-                LocalDate.now()
-                        .minusDays(5)
-                        .atStartOfDay().toInstant(ZoneOffset.of(ZoneId.systemDefault().getId()))
-        );
+        LocalDate dataAtualMenosCinco = LocalDate.now().minusDays(5);
+
+        System.out.println(dataAtualMenosCinco);
 
         List<DTOEmprestimoAtrasado> dtoAtrasado = daoEmprestimo.emprestimosAtrasados(dataAtualMenosCinco, StatusEmprestimo.ATIVO);
+
+        System.out.println(dtoAtrasado.toString());
 
         List<Long> emprestimoIds = new ArrayList<>();
         List<Long> exemplarIds = new ArrayList<>();

@@ -12,6 +12,7 @@ import com.poo.projeto_final.domain.service.EmprestimoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.CollectionModel;
@@ -28,6 +29,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/emprestimo")
+@RequiredArgsConstructor
 public class EmprestimoController {
 
     private static final Logger logger = LoggerFactory.getLogger(EmprestimoController.class);
@@ -36,15 +38,6 @@ public class EmprestimoController {
     private final RealizarEmprestimoUseCase realizarEmprestimoUseCase;
     private final DevolucaoEmprestimoUseCase devolucaoEmprestimoUseCase;
     private final ListarEmprestimoPorIdUseCase listarEmprestimoPorIdUseCase;
-    private final EmprestimoService emprestimoService;
-
-    public EmprestimoController(ListarEmprestimosUseCase listarEmprestimosUseCase, RealizarEmprestimoUseCase realizarEmprestimoUseCase, DevolucaoEmprestimoUseCase devolucaoEmprestimoUseCase, ListarEmprestimoPorIdUseCase listarEmprestimoPorIdUseCase, EmprestimoService emprestimoService) {
-        this.listarEmprestimosUseCase = listarEmprestimosUseCase;
-        this.realizarEmprestimoUseCase = realizarEmprestimoUseCase;
-        this.devolucaoEmprestimoUseCase = devolucaoEmprestimoUseCase;
-        this.listarEmprestimoPorIdUseCase = listarEmprestimoPorIdUseCase;
-        this.emprestimoService = emprestimoService;
-    }
 
     @Operation(summary = "Listar todos os empréstimos de um usuário")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Empréstimos encontrados"), @ApiResponse(responseCode = "404", description = "Nenhum empréstimo encontrado"), @ApiResponse(responseCode = "400", description = "Matrícula inválida"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})

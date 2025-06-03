@@ -47,6 +47,6 @@ VALUES (
            DATE '2025-05-20',     -- data do empréstimo (exemplo: 20 de maio)
            DATE '2025-05-29',     -- data de entrega prevista (há 5 dias do dia atual)
            NULL,                  -- ainda não foi entregue
-           'ATRASADO'             -- status atual
+           'ATIVO'             -- status atual
        );
 

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.CollectionModel;
@@ -28,18 +29,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/livro")
+@RequiredArgsConstructor
 public class LivroController {
 
     private static final Logger logger = LoggerFactory.getLogger(LivroController.class);
     private final CriarLivroUseCase criarLivroUseCase;
     private final BuscaExemplarPorStatusUseCase buscaExemplarPorStatusUseCase;
     private final BuscaLivroPorTituloUseCase buscaLivroPorTituloUseCase;
-
-    public LivroController(CriarLivroUseCase criarLivroUseCase, BuscaExemplarPorStatusUseCase buscaExemplarPorStatusUseCase, BuscaLivroPorTituloUseCase buscaLivroPorTituloUseCase) {
-        this.criarLivroUseCase = criarLivroUseCase;
-        this.buscaExemplarPorStatusUseCase = buscaExemplarPorStatusUseCase;
-        this.buscaLivroPorTituloUseCase = buscaLivroPorTituloUseCase;
-    }
 
     @Operation(summary = "Criar um novo livro")
     @ApiResponses(value = {
