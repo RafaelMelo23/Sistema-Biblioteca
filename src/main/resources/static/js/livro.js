@@ -66,15 +66,17 @@ async function buscarLivrosPorTitulo(titulo) {
     }
 }
 
-async function buscarExemplaresLivro(livroId, status = 'DISPONIVEL') {
+async function buscarExemplaresLivro(livroId, status) {
     try {
         if (!apiLinks['buscar-livro-id']) {
             throw new Error('Link da API não encontrado');
         }
 
+        const statusFinal = status || document.getElementById('status-exemplar').value;
+
         const url = apiLinks['buscar-livro-id'].href
             .replace('{livroId}', livroId)
-            .replace('{statusExemplar}', status);
+            .replace('{statusExemplar}', statusFinal);
 
         const response = await fetch(url);
 
@@ -89,6 +91,26 @@ async function buscarExemplaresLivro(livroId, status = 'DISPONIVEL') {
         return [];
     }
 }
+
+document.getElementById('btn-buscar').addEventListener('click', function() {
+    const titulo = document.getElementById('busca-titulo').value.trim();
+    if (titulo) {
+        buscarLivrosPorTitulo(titulo);
+    }
+});
+
+document.getElementById('btn-buscar').addEventListener('click', function() {
+    const titulo = document.getElementById('busca-titulo').value.trim();
+    if (titulo) {
+        buscarLivrosPorTitulo(titulo);
+    }
+});
+
+const originalBuscarExemplares = window.buscarExemplaresLivro;
+window.buscarExemplaresLivro = function(livroId, status) {
+    const statusSelecionado = document.getElementById('status-exemplar').value;
+    return originalBuscarExemplares(livroId, statusSelecionado);
+};
 
 function exibirResultadosBusca(livros) {
     const listaLivros = document.getElementById('lista-livros');

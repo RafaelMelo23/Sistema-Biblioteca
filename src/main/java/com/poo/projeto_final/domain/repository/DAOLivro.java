@@ -16,6 +16,6 @@ public interface DAOLivro extends ListCrudRepository<Livro, Long> {
 
     boolean existsByIsbn(Isbn isbn);
 
-    @Query("SELECT l FROM Livro l WHERE l.titulo.value LIKE CONCAT('%', :titulo, '%')")
+    @Query("SELECT l FROM Livro l WHERE LOWER(l.titulo.value) LIKE CONCAT('%', LOWER(:titulo), '%')")
     List<Livro> findByTituloContains(@Param("titulo") String titulo);
 }
