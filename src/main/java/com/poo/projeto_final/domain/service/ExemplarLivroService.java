@@ -42,7 +42,7 @@ public class ExemplarLivroService {
 
         try {
 
-            for (int i = 1; i <= quantidade; i++) {
+            for (int i = 0; i < quantidade; i++) {
 
                 int quantidadeAtual = Math.toIntExact(contagemAtual + i);
 
