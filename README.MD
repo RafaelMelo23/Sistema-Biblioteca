@@ -1,4 +1,4 @@
-# 📚 Sistema de Gerenciamento de Biblioteca (Library Management System)
+# 📚 Sistema de Gerenciamento de Biblioteca
 
 Este projeto é um **Sistema de Gerenciamento de Biblioteca** modularizado e orientado a domínios, implementado em **Java 21+** com **Spring Boot**. O objetivo principal é fornecer APIs RESTful robustas para cadastro de livros, usuários (alunos e professores), controle de empréstimos/devoluções e navegação HATEOAS entre os recursos. A arquitetura foi desenhada para ser facilmente extensível, testável e aderente às boas práticas de Domain-Driven Design (DDD).
 
