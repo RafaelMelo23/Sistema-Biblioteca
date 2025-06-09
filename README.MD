@@ -14,9 +14,7 @@ Este projeto é um **Sistema de Gerenciamento de Biblioteca** modularizado e ori
 - **Lombok** (redução de boilerplate em entidades, DTOs e classes de serviço)
 - **H2 Database** (banco em memória para ambientes de desenvolvimento/teste)
 - **Swagger / Springdoc OpenAPI** (documentação automática de API)
-- **Maven Wrapper** (`mvnw`) para build e execução consistentes
-- **JUnit 5** + **Mockito** (para testes de unidade e integração)
-
+- **Maven Wrapper** Para build
 ---
 
 ## ⚙️ Motivação e Escolhas Técnicas
