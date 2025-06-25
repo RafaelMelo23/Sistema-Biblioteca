@@ -2,9 +2,7 @@ package com.poo.projeto_final.api.controller.livro;
 
 import com.poo.projeto_final.application.dto.DTOExemplarLivro;
 import com.poo.projeto_final.application.dto.DTOLivro;
-import com.poo.projeto_final.application.usecase.livro.BuscaExemplarPorStatusUseCase;
-import com.poo.projeto_final.application.usecase.livro.BuscaLivroPorTituloUseCase;
-import com.poo.projeto_final.application.usecase.livro.CriarLivroUseCase;
+import com.poo.projeto_final.application.usecase.LivroUseCase;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.livro.Livro;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,9 +31,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class LivroController {
 
     private static final Logger logger = LoggerFactory.getLogger(LivroController.class);
-    private final CriarLivroUseCase criarLivroUseCase;
-    private final BuscaExemplarPorStatusUseCase buscaExemplarPorStatusUseCase;
-    private final BuscaLivroPorTituloUseCase buscaLivroPorTituloUseCase;
+    private final LivroUseCase livroUseCase;
 
     @Operation(summary = "Criar um novo livro")
     @ApiResponses(value = {
@@ -49,7 +45,7 @@ public class LivroController {
     public ResponseEntity<?> criarLivro(@Parameter(description = "DTO contendo os dados do livro") @RequestBody DTOLivro dto) {
 
         try {
-            criarLivroUseCase.criarLivro(dto);
+            livroUseCase.cadastrarLivro(dto);
 
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
@@ -70,7 +66,7 @@ public class LivroController {
     public List<DTOExemplarLivro> buscarLivros(@Parameter(description = "ID do livro") @RequestParam Long livroId,
                                                @Parameter(description = "Status do exemplar") @RequestParam StatusExemplar statusExemplar) {
 
-        return buscaExemplarPorStatusUseCase.buscarExemplarPorStatus(livroId, statusExemplar);
+        return livroUseCase.buscarExemplarPorStatus(livroId, statusExemplar);
     }
 
     @Operation(summary = "Buscar livros cujo título contenha o termo informado")
@@ -82,7 +78,7 @@ public class LivroController {
     public CollectionModel<EntityModel<Livro>> buscarPorTituloContem(@Parameter(description = "Parte do título a ser buscada")
                                                                      @RequestParam String titulo) {
 
-        List<Livro> livros = buscaLivroPorTituloUseCase.buscaLivroPorTituloContem(titulo);
+        List<Livro> livros = livroUseCase.listarPorTitulo(titulo);
 
         List<EntityModel<Livro>> livrosComLinks = livros.stream().map(livro -> {
             EntityModel<Livro> recurso = EntityModel.of(livro);

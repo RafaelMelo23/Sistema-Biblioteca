@@ -1,10 +1,10 @@
 package com.poo.projeto_final.impl.domain.repository;
 
+import com.poo.projeto_final.application.dto.DTOExemplarLivro;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.exemplar.CodigoExemplar;
 import com.poo.projeto_final.domain.model.exemplar.ExemplarLivro;
 import com.poo.projeto_final.domain.repository.ExemplarLivroRepository;
-import com.poo.projeto_final.infrastructure.config.persistence.entities.ExemplarLivroData;
 import com.poo.projeto_final.infrastructure.config.persistence.mappers.ExemplarLivroMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -25,8 +24,17 @@ public class ExemplarLivroRepositoryImpl implements ExemplarLivroRepository {
 
     @Override
     public long contarTodos() {
-        return entityManager.createQuery("SELECT COUNT(e) FROM ExemplarLivroData e", Long.class)
-                .getSingleResult();
+        return entityManager.createQuery("""
+        SELECT COUNT(e) FROM ExemplarLivroData e""", Long.class).getSingleResult();
+    }
+
+    @Override
+    public void salvar(ExemplarLivro exemplarLivro) {
+        if (exemplarLivro.getId() == null) {
+            entityManager.persist(exemplarLivro);
+        } else {
+            entityManager.merge(exemplarLivro);
+        }
     }
 
     @Override
@@ -49,15 +57,6 @@ public class ExemplarLivroRepositoryImpl implements ExemplarLivroRepository {
     }
 
     @Override
-    public void salvar(ExemplarLivro exemplarLivro) {
-        if (exemplarLivro.getId() == null) {
-            entityManager.persist(exemplarLivro);
-        } else {
-            entityManager.merge(exemplarLivro);
-        }
-    }
-
-    @Override
     public void setStatusExemplar(StatusExemplar statusExemplar, Long exemplarId) {
         entityManager.createQuery("""
             UPDATE ExemplarLivroData e SET e.statusExemplar = :status
@@ -66,6 +65,7 @@ public class ExemplarLivroRepositoryImpl implements ExemplarLivroRepository {
                 .setParameter("status", statusExemplar)
                 .setParameter("id", exemplarId)
                 .executeUpdate();
+
     }
 
     @Override
@@ -92,20 +92,17 @@ public class ExemplarLivroRepositoryImpl implements ExemplarLivroRepository {
                 .findFirst();
     }
 
-    @Override
-    public List<ExemplarLivro> buscarPorLivroEStatus(Long livroId, StatusExemplar status) {
-        List<ExemplarLivroData> exemplares = entityManager.createQuery("""
-            SELECT e FROM ExemplarLivroData e
-            WHERE e.livroData.id = :livroId AND e.statusExemplar = :status
-        """, ExemplarLivroData.class)
+    public List<DTOExemplarLivro> buscarDTOsPorLivroEStatus(Long livroId, StatusExemplar status) {
+        return entityManager.createQuery("""
+        SELECT new com.poo.projeto_final.application.dto.DTOExemplarLivro(e.codigoExemplar.value, e.statusExemplar)
+        FROM ExemplarLivroData e
+        WHERE e.livroData.id = :livroId AND e.statusExemplar = :status
+    """, DTOExemplarLivro.class)
                 .setParameter("livroId", livroId)
                 .setParameter("status", status)
                 .getResultList();
-
-        return exemplares.stream()
-                .map(mapper::toDomain)
-                .collect(Collectors.toList());
     }
+
 
     @Override
     public void alterarStatusExemplar(List<Long> exemplarIds, StatusExemplar status) {
@@ -116,11 +113,14 @@ public class ExemplarLivroRepositoryImpl implements ExemplarLivroRepository {
                 .setParameter("status", status)
                 .setParameter("ids", exemplarIds)
                 .executeUpdate();
+
     }
 
+    @Override
     public CodigoExemplar findCodigoExemplarByExemplarId(Long exemplarId) {
         return entityManager.createQuery("""
         SELECT ex.codigoExemplar FROM ExemplarLivroData ex WHERE ex.id = :exemplarId""", CodigoExemplar.class
         ).getSingleResult();
     }
 }
+

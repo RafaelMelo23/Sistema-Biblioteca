@@ -5,8 +5,8 @@ import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.emprestimo.Emprestimo;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import com.poo.projeto_final.domain.repository.EmprestimoRepository;
+import com.poo.projeto_final.domain.repository.ExemplarLivroRepository;
 import com.poo.projeto_final.domain.service.EmprestimoService;
-import com.poo.projeto_final.impl.domain.repository.ExemplarLivroRepositoryImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class EmprestimoServiceImpl implements EmprestimoService {
 
     private final EmprestimoRepository emprestimoRepo;
-    private final ExemplarLivroRepositoryImpl exemplarRepo;
+    private final ExemplarLivroRepository exemplarRepo;
 
     @Override
     public List<Emprestimo> buscarAtrasos(Matricula matricula) {
@@ -63,7 +63,7 @@ public class EmprestimoServiceImpl implements EmprestimoService {
     }
 
     @Override
-    public void atualizarAtrasos() {
+    public void aplicarStatusAtrasadoAoEmprestimo() {
         var dataAtualMenosCinco = LocalDate.now().minusDays(5);
 
         var atrasos = emprestimoRepo.emprestimosAtrasados(dataAtualMenosCinco, StatusEmprestimo.ATIVO);
@@ -72,7 +72,7 @@ public class EmprestimoServiceImpl implements EmprestimoService {
                 .map(Emprestimo::getId)
                 .toList();
 
-        var idsEx  = atrasos.stream()
+        var idsEx = atrasos.stream()
                 .map(Emprestimo::getExemplarLivroId)
                 .toList();
 

@@ -28,18 +28,4 @@ public class ExemplarLivro {
     public static ExemplarLivro criarExemplar(Livro livro, CodigoExemplar codigoExemplar) {
         return new ExemplarLivro(livro, codigoExemplar);
     }
-
-    public void marcarComoEmprestado() {
-        if (this.statusExemplar != StatusExemplar.DISPONIVEL) {
-            throw new IllegalStateException("Exemplar não está disponível para empréstimo.");
-        }
-        this.statusExemplar = StatusExemplar.EMPRESTADO;
-    }
-
-    public void marcarComoDisponivel() {
-        if (this.statusExemplar != StatusExemplar.EMPRESTADO) {
-            throw new IllegalStateException("Exemplar não pode ser marcado como disponível pois não está emprestado.");
-        }
-        this.statusExemplar = StatusExemplar.DISPONIVEL;
-    }
 }

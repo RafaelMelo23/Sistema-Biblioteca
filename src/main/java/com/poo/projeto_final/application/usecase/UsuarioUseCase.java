@@ -1,15 +1,15 @@
-package com.poo.projeto_final.impl.domain.service;
+package com.poo.projeto_final.application.usecase;
 
 import com.poo.projeto_final.application.dto.DTOAluno;
 import com.poo.projeto_final.application.dto.DTOProfessor;
-import com.poo.projeto_final.domain.impl.domain.repository.AlunoRepositoryImpl;
-import com.poo.projeto_final.domain.impl.domain.repository.ProfessorRepositoryImpl;
 import com.poo.projeto_final.domain.model.aluno.Aluno;
 import com.poo.projeto_final.domain.model.professor.Professor;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import com.poo.projeto_final.domain.model.usuario.Cpf;
 import com.poo.projeto_final.domain.model.usuario.Email;
 import com.poo.projeto_final.domain.model.usuario.UsuarioBiblioteca;
+import com.poo.projeto_final.domain.repository.AlunoRepository;
+import com.poo.projeto_final.domain.repository.ProfessorRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,15 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @AllArgsConstructor
-public class UsuarioService {
+public class UsuarioUseCase {
 
-    private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
+    private static final Logger log = LoggerFactory.getLogger(com.poo.projeto_final.impl.domain.service.UsuarioService.class);
 
     /**
      * Interfaces JPA para chamadas ao banco relacionadas à tabela de alunos e professores.
      */
-    private final AlunoRepositoryImpl alunoRepository;
-    private final ProfessorRepositoryImpl professorRepository;
+    private final AlunoRepository alunoRepository;
+    private final ProfessorRepository professorRepository;
 
     /**
      * Cadastra um novo aluno baseado no DTO recebido.
@@ -48,10 +48,10 @@ public class UsuarioService {
             throw new IllegalArgumentException("Já existe um aluno registrado com a matrícula: " + dtoAluno.matricula());
         }
 
-        try {
-            Aluno aluno = Aluno.of(dtoAluno.nome(), dtoAluno.email(), dtoAluno.cpf(), dtoAluno.matricula());
+        Aluno aluno = Aluno.of(dtoAluno.nome(), dtoAluno.cpf(), dtoAluno.email(), dtoAluno.matricula());
 
-            alunoRepository.save(aluno);
+        try {
+            alunoRepository.salvar(aluno);
         } catch (Exception e) {
             log.error("Erro ao criar aluno: {}", e.getMessage(), e);
             throw new IllegalArgumentException("Erro ao criar aluno: " + e.getMessage());
@@ -75,7 +75,7 @@ public class UsuarioService {
             Professor professor = Professor.of(dtoProfessor.nome(), dtoProfessor.email(),
                     dtoProfessor.cpf(), dtoProfessor.matricula());
 
-            professorRepository.save(professor);
+            professorRepository.salvar(professor);
         } catch (Exception e) {
             log.error("Erro ao criar professor: {}", e.getMessage(), e);
             throw new IllegalArgumentException("Erro ao criar professor: " + e.getMessage());
@@ -84,22 +84,18 @@ public class UsuarioService {
 
     public UsuarioBiblioteca validarExistencia(Matricula matricula) {
 
-        UsuarioBiblioteca usuario = alunoRepository.findByMatricula(matricula)
+        return alunoRepository.findByMatricula(matricula)
                 .map(aluno -> (UsuarioBiblioteca) aluno)
                 .orElseGet(() ->
                         professorRepository.findByMatricula(matricula)
                                 .map(prof -> (UsuarioBiblioteca) prof)
                                 .orElseThrow(() -> new IllegalArgumentException("Usuário com a matricula informada não existe")));
-
-        return usuario;
     }
 
     public String buscarNome(Matricula matricula) {
 
-        String nome = alunoRepository.findNameByMatricula(matricula)
-                        .or(() -> professorRepository.findNameByMatricula(matricula))
-                                .orElseThrow(() -> new IllegalArgumentException("Usuário com a matricula informada não existe"));
-
-        return nome;
+        return alunoRepository.findNameByMatricula(matricula)
+                .or(() -> professorRepository.findNameByMatricula(matricula))
+                .orElseThrow(() -> new IllegalArgumentException("Usuário com a matricula informada não existe"));
     }
 }

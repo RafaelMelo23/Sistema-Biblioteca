@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class LivroRepositoryImpl implements LivroRepository {
 
+
+
     @PersistenceContext
     private EntityManager entityManager;
     private final LivroMapper mapper;
@@ -33,6 +35,18 @@ public class LivroRepositoryImpl implements LivroRepository {
                 .getSingleResult();
 
         return mapper.toDomain(livroData);
+    }
+
+    @Override
+    public void salvar(Livro livro) {
+
+        LivroData livroData = mapper.toData(livro);
+
+        if (livroData.getId() == null) {
+            entityManager.persist(livroData);
+        } else {
+            entityManager.merge(livroData);
+        }
     }
 
     @Override
@@ -54,7 +68,7 @@ public class LivroRepositoryImpl implements LivroRepository {
     }
 
     @Override
-    public List<Livro> findByTituloContains(String titulo) {
+    public List<Livro> findByTituloContains(Titulo titulo) {
         List<LivroData> livrosData = entityManager.createQuery(
                         "SELECT l FROM LivroData l WHERE LOWER(l.titulo.value) LIKE CONCAT('%', LOWER(:titulo), '%')", LivroData.class)
                 .setParameter("titulo", titulo)

@@ -1,5 +1,6 @@
 package com.poo.projeto_final.domain.repository;
 
+import com.poo.projeto_final.application.dto.DTOExemplarLivro;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.exemplar.CodigoExemplar;
 import com.poo.projeto_final.domain.model.exemplar.ExemplarLivro;
@@ -21,7 +22,7 @@ public interface ExemplarLivroRepository {
 
     Optional<Long> buscarLivroIdPorExemplarId(Long exemplarLivroId);
 
-    List<ExemplarLivro> buscarPorLivroEStatus(Long livroId, StatusExemplar status);
+    List<DTOExemplarLivro> buscarPorLivroEStatus(Long livroId, StatusExemplar status);
 
     void alterarStatusExemplar(List<Long> exemplarIds, StatusExemplar status);
 

@@ -14,5 +14,5 @@ public interface EmprestimoService {
 
     void finalizarEmprestimo(Matricula matricula, String codigoExemplar);
 
-    void atualizarAtrasos();
+    void aplicarStatusAtrasadoAoEmprestimo();
 }

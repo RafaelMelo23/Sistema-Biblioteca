@@ -30,6 +30,17 @@ public class ProfessorRepositoryImpl implements ProfessorRepository {
     }
 
     @Override
+    public void salvar(Professor professor) {
+        ProfessorData professorData = mapper.toData(professor);
+
+        if (professorData.getId() == null) {
+            entityManager.persist(professorData);
+        } else
+            entityManager.merge(professorData);
+    }
+
+
+    @Override
     public Optional<Professor> findByMatricula(Matricula matricula) {
         var query = entityManager.createQuery(
                 "SELECT p FROM ProfessorData p WHERE p.matricula = :matricula", ProfessorData.class);

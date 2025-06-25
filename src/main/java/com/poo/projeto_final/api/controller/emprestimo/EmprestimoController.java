@@ -4,7 +4,7 @@ import com.poo.projeto_final.application.dto.DTOEmprestimo;
 import com.poo.projeto_final.application.dto.DTOListagemCompleta;
 import com.poo.projeto_final.application.dto.DTOListarEmprestimo;
 import com.poo.projeto_final.application.dto.DTOResultadoEmprestimo;
-import com.poo.projeto_final.application.usecase.emprestimo.EmprestimoUseCase;
+import com.poo.projeto_final.application.usecase.EmprestimoUseCase;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

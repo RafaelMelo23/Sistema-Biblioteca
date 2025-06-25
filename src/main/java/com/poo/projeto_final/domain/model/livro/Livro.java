@@ -1,5 +1,10 @@
 package com.poo.projeto_final.domain.model.livro;
+import com.poo.projeto_final.domain.model.exemplar.CodigoExemplar;
+import com.poo.projeto_final.domain.model.exemplar.ExemplarLivro;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class Livro {
@@ -30,5 +35,23 @@ public class Livro {
 
     public static Livro criarLivro(String titulo, String autor, String isbn, String ano, String editora) {
         return new Livro(titulo, autor, isbn, ano, editora);
+    }
+
+    public List<ExemplarLivro> criarExemplares(int quantidade, long contagemTotalExemplares) {
+
+        Livro livro = this;
+        List<ExemplarLivro> exemplares = new ArrayList<>(quantidade);
+
+        for (int i = 0; i < quantidade; i++) {
+
+            int quantidadeAtual = Math.toIntExact(contagemTotalExemplares + i);
+
+            ExemplarLivro novoExemplar = ExemplarLivro
+                    .criarExemplar(livro, CodigoExemplar.of(quantidadeAtual));
+
+            exemplares.add(novoExemplar);
+        }
+
+        return exemplares;
     }
 }

@@ -26,4 +26,8 @@ public class Aluno extends UsuarioBiblioteca {
         super(id, nome, cpf, email);
         this.matricula = matricula;
     }
+
+    public static Aluno of(String nome, String cpf, String email, String matricula) {
+        return (Aluno) criarAluno(nome, cpf, email, matricula);
+    }
 }

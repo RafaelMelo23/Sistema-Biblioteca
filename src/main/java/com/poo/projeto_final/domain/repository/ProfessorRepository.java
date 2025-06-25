@@ -14,4 +14,6 @@ public interface ProfessorRepository {
     Optional<Professor> findByMatricula(Matricula matricula);
 
     Optional<String> findNameByMatricula(Matricula matricula);
+
+    void salvar(Professor professor);
 }

@@ -1,4 +1,4 @@
-package com.poo.projeto_final.application.usecase.emprestimo;
+package com.poo.projeto_final.application.usecase;
 
 import com.poo.projeto_final.application.dto.DTOEmprestimo;
 import com.poo.projeto_final.application.dto.DTOListagemCompleta;
@@ -11,7 +11,6 @@ import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import com.poo.projeto_final.domain.model.usuario.UsuarioBiblioteca;
 import com.poo.projeto_final.domain.repository.*;
 import com.poo.projeto_final.domain.service.EmprestimoService;
-import com.poo.projeto_final.impl.domain.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,7 @@ public class EmprestimoUseCase {
     private final AlunoRepository alunoRepository;
     private final ProfessorRepository profRepo;
     private final LivroRepository livroRepositoryImpl;
-    private final UsuarioService usuarioService;
+    private final UsuarioUseCase usuarioUseCase;
     private final EmprestimoRepository emprestimoRepositoryImpl;
     private final EmprestimoService emprestimoService;
 
@@ -40,7 +39,7 @@ public class EmprestimoUseCase {
         }
 
         Matricula matricula = Matricula.of(in.matricula());
-        UsuarioBiblioteca usuario = usuarioService.validarExistencia(matricula);
+        UsuarioBiblioteca usuario = usuarioUseCase.validarExistencia(matricula);
 
         List<Emprestimo> emprestimosAtrasados = emprestimoService.buscarAtrasos(matricula);
         if (!emprestimosAtrasados.isEmpty()) {
@@ -87,7 +86,7 @@ public class EmprestimoUseCase {
 
         Emprestimo emprestimo = emprestimoRepositoryImpl.listarEmprestimoPorId(emprestimoId);
 
-        String nomeUsuario = usuarioService.buscarNome(emprestimo.getMatricula());
+        String nomeUsuario = usuarioUseCase.buscarNome(emprestimo.getMatricula());
 
         Livro livro = livroRepositoryImpl.findByExemplarId(emprestimo.getExemplarLivroId());
 
@@ -113,7 +112,7 @@ public class EmprestimoUseCase {
 
         List<Emprestimo> emprestimosPorUsuario = emprestimoRepositoryImpl.listarEmprestimosUsuario(matricula);
 
-        String nomeUsuario = usuarioService.buscarNome(matricula);
+        String nomeUsuario = usuarioUseCase.buscarNome(matricula);
 
         return emprestimosPorUsuario.stream()
                 .map(emprestimo -> {

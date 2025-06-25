@@ -9,13 +9,17 @@ import java.util.List;
 
 public interface LivroRepository {
 
+    void salvar(Livro livro);
+
     boolean existsByTitulo(Titulo titulo);
 
     boolean existsByIsbn(Isbn isbn);
 
-    List<Livro> findByTituloContains(String titulo);
+    List<Livro> findByTituloContains(Titulo titulo);
 
     String findTituloByExemplarId(Long exemplarId);
 
     Livro findByExemplarId(Long exemplarId);
+
+
 }

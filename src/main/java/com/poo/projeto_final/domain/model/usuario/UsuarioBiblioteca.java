@@ -3,10 +3,12 @@ package com.poo.projeto_final.domain.model.usuario;
 import com.poo.projeto_final.domain.model.aluno.Aluno;
 import com.poo.projeto_final.domain.model.professor.Professor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class UsuarioBiblioteca {
 
+    @Setter
     private Long id;
     private final Nome nome;
     private final Cpf cpf;
@@ -23,10 +25,6 @@ public class UsuarioBiblioteca {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public static UsuarioBiblioteca criarAluno(String nome, String cpf, String email, String matricula) {

@@ -2,14 +2,14 @@ package com.poo.projeto_final.api.controller.usuario;
 
 import com.poo.projeto_final.application.dto.DTOAluno;
 import com.poo.projeto_final.application.dto.DTOProfessor;
-import com.poo.projeto_final.application.usecase.usuario.CriarAlunoUseCase;
-import com.poo.projeto_final.application.usecase.usuario.CriarProfessorUseCase;
+import com.poo.projeto_final.application.usecase.UsuarioUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,16 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/usuario")
 public class UsuarioController {
 
-    private final CriarAlunoUseCase criarAlunoUseCase;
-    private final CriarProfessorUseCase criarProfessorUseCase;
-
-    public UsuarioController(CriarAlunoUseCase criarAlunoUseCase, CriarProfessorUseCase criarProfessorUseCase) {
-        this.criarAlunoUseCase = criarAlunoUseCase;
-        this.criarProfessorUseCase = criarProfessorUseCase;
-    }
+    private final UsuarioUseCase usuarioUseCase;
 
     @Operation(summary = "Cadastrar um novo aluno")
     @ApiResponses(value = {
@@ -46,7 +41,7 @@ public class UsuarioController {
                 return ResponseEntity.badRequest().body("O corpo está vazio");
             }
 
-            criarAlunoUseCase.criarAluno(aluno);
+            usuarioUseCase.criarAluno(aluno);
 
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
@@ -74,7 +69,7 @@ public class UsuarioController {
                 return ResponseEntity.badRequest().body("O corpo está vazio");
             }
 
-            criarProfessorUseCase.criarProfessor(professor);
+            usuarioUseCase.criarProfessor(professor);
 
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
