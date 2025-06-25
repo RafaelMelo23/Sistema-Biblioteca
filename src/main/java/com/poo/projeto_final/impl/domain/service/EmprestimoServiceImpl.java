@@ -4,8 +4,8 @@ import com.poo.projeto_final.domain.enums.StatusEmprestimo;
 import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.emprestimo.Emprestimo;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
+import com.poo.projeto_final.domain.repository.EmprestimoRepository;
 import com.poo.projeto_final.domain.service.EmprestimoService;
-import com.poo.projeto_final.impl.domain.repository.EmprestimoRepositoryImpl;
 import com.poo.projeto_final.impl.domain.repository.ExemplarLivroRepositoryImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class EmprestimoServiceImpl implements EmprestimoService {
 
-    private final EmprestimoRepositoryImpl emprestimoRepo;
+    private final EmprestimoRepository emprestimoRepo;
     private final ExemplarLivroRepositoryImpl exemplarRepo;
 
     @Override
@@ -46,14 +46,13 @@ public class EmprestimoServiceImpl implements EmprestimoService {
 
         exemplarRepo.setStatusExemplar(StatusExemplar.EMPRESTADO, exemplarId);
 
-        Emprestimo emprestimoRealizado = Emprestimo.realizarEmprestimo(matricula, exemplarId,
-                                                        dataPrevista, StatusEmprestimo.ATIVO);
+        Emprestimo emprestimoRealizado = Emprestimo.realizarEmprestimo(matricula, exemplarId, dataPrevista);
 
         return emprestimoRepo.salvar(emprestimoRealizado);
     }
 
     @Override
-    public void devolverEmprestimo(Matricula matricula, String codigoExemplar) {
+    public void finalizarEmprestimo(Matricula matricula, String codigoExemplar) {
 
         Long exemplarId = exemplarRepo
                 .buscarExemplarDisponivelIdPorCodigo(codigoExemplar, StatusExemplar.EMPRESTADO)

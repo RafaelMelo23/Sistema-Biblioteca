@@ -8,7 +8,6 @@ import com.poo.projeto_final.infrastructure.config.persistence.entities.Exemplar
 import com.poo.projeto_final.infrastructure.config.persistence.mappers.ExemplarLivroMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 

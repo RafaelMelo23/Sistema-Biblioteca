@@ -1,6 +1,7 @@
 package com.poo.projeto_final.domain.repository;
 
 import com.poo.projeto_final.domain.enums.StatusExemplar;
+import com.poo.projeto_final.domain.model.exemplar.CodigoExemplar;
 import com.poo.projeto_final.domain.model.exemplar.ExemplarLivro;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface ExemplarLivroRepository {
     List<ExemplarLivro> buscarPorLivroEStatus(Long livroId, StatusExemplar status);
 
     void alterarStatusExemplar(List<Long> exemplarIds, StatusExemplar status);
+
+    CodigoExemplar findCodigoExemplarByExemplarId(Long exemplarId);
 }

@@ -12,7 +12,7 @@ public interface EmprestimoService {
 
     Emprestimo realizarEmprestimo(Matricula matricula, String codigoExemplar, LocalDate dataPrevista);
 
-    void devolverEmprestimo(Matricula matricula, String codigoExemplar);
+    void finalizarEmprestimo(Matricula matricula, String codigoExemplar);
 
     void atualizarAtrasos();
 }

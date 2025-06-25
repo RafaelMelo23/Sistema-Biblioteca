@@ -4,13 +4,12 @@ import com.poo.projeto_final.application.dto.DTOEmprestimo;
 import com.poo.projeto_final.application.dto.DTOListagemCompleta;
 import com.poo.projeto_final.application.dto.DTOListarEmprestimo;
 import com.poo.projeto_final.application.dto.DTOResultadoEmprestimo;
-import com.poo.projeto_final.domain.impl.domain.repository.*;
-import com.poo.projeto_final.domain.impl.domain.service.EmprestimoServiceImpl;
 import com.poo.projeto_final.domain.model.emprestimo.Emprestimo;
 import com.poo.projeto_final.domain.model.exemplar.CodigoExemplar;
 import com.poo.projeto_final.domain.model.livro.Livro;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import com.poo.projeto_final.domain.model.usuario.UsuarioBiblioteca;
+import com.poo.projeto_final.domain.repository.*;
 import com.poo.projeto_final.domain.service.EmprestimoService;
 import com.poo.projeto_final.impl.domain.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +24,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmprestimoUseCase {
 
-    private final AlunoRepositoryImpl alunoRepository;
-    private final ProfessorRepositoryImpl profRepo;
-    private final LivroRepositoryImpl livroRepositoryImpl;
+    private final ExemplarLivroRepository exemplarLivroRepository;
+    private final AlunoRepository alunoRepository;
+    private final ProfessorRepository profRepo;
+    private final LivroRepository livroRepositoryImpl;
     private final UsuarioService usuarioService;
+    private final EmprestimoRepository emprestimoRepositoryImpl;
     private final EmprestimoService emprestimoService;
-    private final EmprestimoServiceImpl emprestimoServiceImpl;
-    private final EmprestimoRepositoryImpl emprestimoRepositoryImpl;
-    private final ExemplarLivroRepositoryImpl exemplarLivroRepositoryImpl;
 
     @Transactional
     public DTOResultadoEmprestimo registrarEmprestimo(DTOEmprestimo in) {
@@ -62,7 +60,7 @@ public class EmprestimoUseCase {
             return new DTOResultadoEmprestimo(false, dtos);
         }
 
-        emprestimoServiceImpl.realizarEmprestimo(matricula, in.codigoExemplar(), in.dataPrevista());
+        emprestimoService.realizarEmprestimo(matricula, in.codigoExemplar(), in.dataPrevista());
 
         return new DTOResultadoEmprestimo(true, List.of());
     }
@@ -79,7 +77,7 @@ public class EmprestimoUseCase {
 
         if (!usuarioExists) throw new IllegalArgumentException("Usuário inválido");
 
-        emprestimoServiceImpl.devolverEmprestimo(matricula, in.codigoExemplar());
+        emprestimoService.finalizarEmprestimo(matricula, in.codigoExemplar());
     }
 
     /* Puxei de forma singular cada dado necessário, a fim de seguir DDD de forma mais pura, obviamente poderia fazer uma projection
@@ -93,7 +91,7 @@ public class EmprestimoUseCase {
 
         Livro livro = livroRepositoryImpl.findByExemplarId(emprestimo.getExemplarLivroId());
 
-        CodigoExemplar codigoExemplar = exemplarLivroRepositoryImpl.findCodigoExemplarByExemplarId(emprestimo.getExemplarLivroId());
+        CodigoExemplar codigoExemplar = exemplarLivroRepository.findCodigoExemplarByExemplarId(emprestimo.getExemplarLivroId());
 
         return new DTOListagemCompleta(
                 nomeUsuario,
@@ -120,7 +118,7 @@ public class EmprestimoUseCase {
         return emprestimosPorUsuario.stream()
                 .map(emprestimo -> {
                     Livro livro = livroRepositoryImpl.findByExemplarId(emprestimo.getExemplarLivroId());
-                    CodigoExemplar codigoExemplar = exemplarLivroRepositoryImpl.findCodigoExemplarByExemplarId(emprestimo.getExemplarLivroId());
+                    CodigoExemplar codigoExemplar = exemplarLivroRepository.findCodigoExemplarByExemplarId(emprestimo.getExemplarLivroId());
 
                     return new DTOListarEmprestimo(
                             emprestimo.getId(),
