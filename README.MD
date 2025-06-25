@@ -1,68 +1,69 @@
-# 📚 Sistema de Gerenciamento de Biblioteca
+# 🌐 Sistema Web de Gerenciamento de Biblioteca (API + Front-end HATEOAS)
 
-Este projeto é um **Sistema de Gerenciamento de Biblioteca** modularizado e orientado a domínios, implementado em **Java 21+** com **Spring Boot**. O objetivo principal é fornecer APIs RESTful robustas para cadastro de livros, usuários (alunos e professores), controle de empréstimos/devoluções e navegação HATEOAS entre os recursos. A arquitetura foi desenhada para ser facilmente extensível, testável e aderente às boas práticas de Domain-Driven Design (DDD).
+Uma **aplicação web full-stack** para gerenciamento de uma biblioteca, composta por:
 
----
+- Um **front-end responsivo** que consome a API HATEOAS e oferece interfaces de cadastro, busca e controle de empréstimos.
+- Uma **API RESTful** robusta e autodocumentada, construída com **Java 21+**, **Spring Boot 3** e arquitetura inspirada em **Domain-Driven Design (DDD)**.
 
-## 🚀 Visão Geral das Tecnologias
-
-- **Java 21+**
-- **Spring Boot** (versão 3.x)
-    - **Spring Web** (MVC e REST)
-    - **Spring Data JPA** (persistência com JPA/Hibernate)
-    - **Spring HATEOAS** (hipermídia nos endpoints REST)
-- **Lombok** (redução de boilerplate em entidades, DTOs e classes de serviço)
-- **H2 Database** (banco em memória para ambientes de desenvolvimento/teste)
-- **Swagger / Springdoc OpenAPI** (documentação automática de API)
-- **Maven Wrapper** Para build
----
-
-## ⚙️ Motivação e Escolhas Técnicas
-
-1. **Arquitetura Orientada a Domínios (DDD-Inspired)**
-    - Camadas bem definidas:
-        - **API Layer** (`api/`): Controllers REST e ponto de entrada HATEOAS (`RootEntryPointController`).
-        - **Application Layer** (`application/`): DTOs (`dto/`) e casos de uso (`usecase/`).
-        - **Domain Layer** (`domain/`): Entidades, enums, interfaces de repositório e regras de negócio.
-        - **Infrastructure Layer** (`infrastructure/config/`): Configurações (Swagger).
-    - Essa separação permite isolar regras de negócio do acesso a banco, facilitando testes automáticos e manutenção.
-
-2. **HATEOAS (Spring HATEOAS)**
-    - Cada recurso REST devolve representações com links (`self`, relacionamentos, ações disponíveis).
-    - O `RootEntryPointController` atua como ponto de entrada “raiz” da API, fornecendo links para coleções principais (usuários, livros, empréstimos).
-    - Facilita a navegação programática pelo cliente (por exemplo, front-ends interativos ou microserviços) sem conhecer URLs fixas.
-
-3. **DTOs e Mapeamento**
-    - **DTOs** (`application/dto/`) garantem desacoplamento entre modelos de domínio e payloads REST.
-    - Evita exposição direta das entidades JPA e permite controle fino sobre quais campos são serializados.
-
-4. **Banco H2 (In-Memory)**
-    - Facilita testes locais e inicialização rápida: sem necessidade de configuração externa, foi escolhido em função do projeto ser acadêmico.
-    - Em produção, pode ser substituído facilmente por um banco relacional (PostgreSQL, MySQL, etc.) apenas ajustando configurações em `application.yml`.
-
-5. **Swagger (OpenAPI)**
-    - Documentação automática de todos os endpoints.
-    - Interface interativa em `/swagger-ui.html` para explorar e testar recursos diretamente.
-
-6. **Lombok**
-    - Reduz código boilerplate em *getters*, *setters*, *constructors*, *builders*, *equals/hashCode* etc.
-    - Torna classes de entidade e DTOs mais concisas.
+O projeto foi concebido não apenas para ser funcional, mas também para servir como exemplo de **código limpo**, **baixo acoplamento** e **alta coesão**, facilitando manutenção e evolução contínua.
 
 ---
 
-## 📷 Capturas de Tela da Interface (UI)
+## 🎯 Motivação e Objetivos Técnicos
 
-### Tela Inicial: Gerenciamento de Empréstimos
-![Tela Inicial Emprestimos](imagens/Emprestimos.png)
+Mais do que CRUD, este sistema foi uma oportunidade para demonstrar padrões que resolvem problemas de sistemas complexos:
 
-### Tela de Gerenciamento de Livros
-![Tela Livros](imagens/Livro.png)
+- **UX guiada por HATEOAS:** O **RootEntryPointController** expõe links para todas as operações, e cada recurso inclui no JSON relações que indicam ações possíveis, permitindo que o front-end descubra dinamicamente rotas e estados sem hard-code de URLs.
+- **Desacoplamento extremo:**
+   - O **front-end** consome a API via hiperlinks; não há dependência direta de rotas no cliente.
+   - A **API** segue DDD, mantendo o domínio puro e livre de dependências de framework.
+- **Separation of Concerns (SoC):**
+   1. **Web UI** (`web/`): HTML, CSS, JavaScript—interfaces que interagem via fetch com os endpoints HATEOAS.
+   2. **API Layer** (`api/`): Controllers REST, links HATEOAS e documentação OpenAPI.
+   3. **Application Layer** (`application/`): Casos de uso orquestram fluxo e validações.
+   4. **Domain Layer** (`domain/`): Entidades, agregados, VOs e regras de negócio sem conhecimento de JPA ou Spring.
+   5. **Infrastructure Layer** (`infrastructure/`): Configuração de banco, implementações JPA, mapeadores e integrações.
+- **Programação por Interfaces & DIP:** O domínio define contratos (ex: `EmprestimoRepository`); a infraestrutura implementa. Isso garante flexibilidade para trocar tecnologias sem alterar regras de negócio.
 
-### Tela de Gerenciamento de Usuarios
-![Tela Usuario](imagens/Usuario.png)
+---
 
-### Swagger UI
-![Tela Swagger](imagens/Swagger.png)
+## 🔧 Ferramentas e Versões — Por que escolhi
 
+| Tecnologia                | Versão | Propósito e Benefício                                                                                                      |
+| ------------------------- | ------ |----------------------------------------------------------------------------------------------------------------------------|
+| **Java**                  | 21+    | LTS moderno com recursos como Records e Pattern Matching, além de desempenho e segurança aprimorados.                      |
+| **Spring Boot**           | 3.3.12 | Framework para acelerar configuração, injeção de dependências e execução de APIs de produção.                              |
+| **Spring HATEOAS**        | –      | Cria respostas hipertextuais com links, tornando a API autodocumentada e permitindo descoberta de ações pelo front-end.    |
+| **Spring Data JPA**       | –      | Persistência via **repositórios customizados** definidos como contratos no domínio, com implementações em `infrastructure`, seguindo DDD. |
+| **H2 Database**           | –      | Banco em memória para prototipagem e testes automáticos, garantindo feedback rápido sem setup externo.                     |
+| **Springdoc OpenAPI**     | –      | Gera documentação interativa (Swagger UI), mantendo-a sempre atualizada com o código.                                      |
+| **Lombok**                | –      | Elimina boilerplate em getters, setters e construtores, deixando classes de modelo mais limpas.                            |
+| **Front-end Web**         | HTML/CSS/JS | Interface que consome endpoints HATEOAS via fetch, demonstrando integração desacoplada entre cliente e servidor. |
 
+---
+
+## 🏛️ Arquitetura e Organização de Pacotes
+
+```plaintext
+com.poo.projeto_final
+├── web                   # Front-end (HTML, CSS, JavaScript)
+├── api.controller        # Camada REST (Controllers + HATEOAS)
+│   └── RootEntryPointController
+├── application           # Camada de Aplicação (Casos de Uso e DTOs)
+│   ├── dto
+│   └── usecase
+├── domain                # Domínio puro (Entidades, VOs, Repositórios como interfaces)
+│   ├── enums
+│   ├── model
+│   ├── repository
+│   └── service
+├── impl.domain           # Implementações do Domínio (RepositoryImpl, Domain Services)
+│   ├── repository
+│   └── service
+└── infrastructure        # Infraestrutura (JPA, mappers, configs, scheduled)
+    ├── config
+    ├── persistence
+    │   ├── entities
+    │   └── mappers
+    └── scheduled
 
