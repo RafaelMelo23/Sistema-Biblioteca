@@ -1,8 +1,8 @@
-# 🌐 Sistema Web de Gerenciamento de Biblioteca (API + Front-end HATEOAS)
+# 🌐 Sistema Web de Gerenciamento de Biblioteca
 
 Uma **aplicação web full-stack** para gerenciamento de uma biblioteca, composta por:
 
-- Um **front-end responsivo** que consome a API HATEOAS e oferece interfaces de cadastro, busca e controle de empréstimos.
+- Um **front-end responsivo** que consome a API HATEOAS e oferece interfaces de cadastro de usuários, busca e controle de empréstimos.
 - Uma **API RESTful** robusta e autodocumentada, construída com **Java 21+**, **Spring Boot 3** e arquitetura inspirada em **Domain-Driven Design (DDD)**.
 
 O projeto foi concebido não apenas para ser funcional, mas também para servir como exemplo de **código limpo**, **baixo acoplamento** e **alta coesão**, facilitando manutenção e evolução contínua.
