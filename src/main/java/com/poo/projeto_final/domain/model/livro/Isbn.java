@@ -8,7 +8,7 @@ public class Isbn {
 
     protected Isbn() {}
 
-    Isbn(String value) {
+    public Isbn(String value) {
         this.value = value;
     }
 

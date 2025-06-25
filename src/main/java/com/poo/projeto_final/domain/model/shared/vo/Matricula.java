@@ -4,9 +4,10 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Matricula {
+
     private String value;
 
-    protected Matricula() {
+    public Matricula() {
     }
 
     public Matricula(String value) {

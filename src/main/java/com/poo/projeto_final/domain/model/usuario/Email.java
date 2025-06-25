@@ -6,10 +6,10 @@ import jakarta.persistence.Embeddable;
 public class Email {
     private String value;
 
-    protected Email() {
+    public Email() {
     }
 
-    Email(String value) {
+    public Email(String value) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("Email não pode ser vazio");
         }

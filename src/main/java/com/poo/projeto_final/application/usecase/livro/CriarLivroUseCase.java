@@ -2,8 +2,8 @@ package com.poo.projeto_final.application.usecase.livro;
 
 import com.poo.projeto_final.application.dto.DTOLivro;
 import com.poo.projeto_final.domain.model.livro.Livro;
-import com.poo.projeto_final.domain.service.ExemplarLivroService;
-import com.poo.projeto_final.domain.service.LivroService;
+import com.poo.projeto_final.impl.domain.service.ExemplarLivroServiceImpl;
+import com.poo.projeto_final.impl.domain.service.LivroService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,18 +15,18 @@ import org.springframework.stereotype.Component;
 public class CriarLivroUseCase {
 
     private final LivroService livroService;
-    private final ExemplarLivroService exemplarLivroService;
+    private final ExemplarLivroServiceImpl exemplarLivroServiceImpl;
 
 
-    public CriarLivroUseCase(LivroService livroService, ExemplarLivroService exemplarLivroService) {
+    public CriarLivroUseCase(LivroService livroService, ExemplarLivroServiceImpl exemplarLivroServiceImpl) {
         this.livroService = livroService;
-        this.exemplarLivroService = exemplarLivroService;
+        this.exemplarLivroServiceImpl = exemplarLivroServiceImpl;
     }
 
     public void criarLivro(DTOLivro dto) {
 
         Livro novoLivro = livroService.cadastrarLivro(dto);
 
-        exemplarLivroService.criarExemplar(novoLivro, dto.quantidade());
+        exemplarLivroServiceImpl.criarExemplar(novoLivro, dto.quantidade());
     }
 }

@@ -7,10 +7,10 @@ public class Nome {
 
     private String value;
 
-    protected Nome() {
+    public Nome() {
     }
 
-    Nome(String value) {
+    public Nome(String value) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("Nome não pode ser vazio");
         }

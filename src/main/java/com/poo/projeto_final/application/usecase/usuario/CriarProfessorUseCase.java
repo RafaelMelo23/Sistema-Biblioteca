@@ -1,7 +1,7 @@
 package com.poo.projeto_final.application.usecase.usuario;
 
 import com.poo.projeto_final.application.dto.DTOProfessor;
-import com.poo.projeto_final.domain.service.UsuarioService;
+import com.poo.projeto_final.impl.domain.service.UsuarioService;
 import org.springframework.stereotype.Component;
 
 @Component

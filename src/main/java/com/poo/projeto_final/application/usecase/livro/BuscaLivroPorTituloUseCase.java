@@ -1,7 +1,7 @@
 package com.poo.projeto_final.application.usecase.livro;
 
 import com.poo.projeto_final.domain.model.livro.Livro;
-import com.poo.projeto_final.domain.repository.DAOLivro;
+import com.poo.projeto_final.domain.repository.LivroRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,15 +13,15 @@ import java.util.List;
 @Component
 public class BuscaLivroPorTituloUseCase {
 
-    private final DAOLivro daoLivro;
+    private final LivroRepository livroRepository;
 
-    public BuscaLivroPorTituloUseCase(DAOLivro daoLivro) {
-        this.daoLivro = daoLivro;
+    public BuscaLivroPorTituloUseCase(LivroRepository livroRepository) {
+        this.livroRepository = livroRepository;
     }
 
     public List<Livro> buscaLivroPorTituloContem(String titulo) {
 
-        return daoLivro.findByTituloContains(titulo);
+        return livroRepository.findByTituloContains(titulo);
     }
 
 }

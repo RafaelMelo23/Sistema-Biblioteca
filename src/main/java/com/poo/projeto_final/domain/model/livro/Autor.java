@@ -8,7 +8,7 @@ public class Autor {
 
     protected Autor() {}
 
-    Autor(String value) {
+    public Autor(String value) {
         this.value = value;
     }
 

@@ -8,7 +8,7 @@ public class Titulo {
 
     protected Titulo() {}
 
-    Titulo(String value) {
+    public Titulo(String value) {
         this.value = value;
     }
 

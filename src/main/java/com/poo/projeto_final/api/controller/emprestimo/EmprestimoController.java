@@ -4,14 +4,12 @@ import com.poo.projeto_final.application.dto.DTOEmprestimo;
 import com.poo.projeto_final.application.dto.DTOListagemCompleta;
 import com.poo.projeto_final.application.dto.DTOListarEmprestimo;
 import com.poo.projeto_final.application.dto.DTOResultadoEmprestimo;
-import com.poo.projeto_final.application.usecase.emprestimo.DevolucaoEmprestimoUseCase;
-import com.poo.projeto_final.application.usecase.emprestimo.ListarEmprestimoPorIdUseCase;
-import com.poo.projeto_final.application.usecase.emprestimo.ListarEmprestimosUseCase;
-import com.poo.projeto_final.application.usecase.emprestimo.RealizarEmprestimoUseCase;
-import com.poo.projeto_final.domain.service.EmprestimoService;
+import com.poo.projeto_final.application.usecase.emprestimo.EmprestimoUseCase;
+import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +31,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class EmprestimoController {
 
     private static final Logger logger = LoggerFactory.getLogger(EmprestimoController.class);
-
-    private final ListarEmprestimosUseCase listarEmprestimosUseCase;
-    private final RealizarEmprestimoUseCase realizarEmprestimoUseCase;
-    private final DevolucaoEmprestimoUseCase devolucaoEmprestimoUseCase;
-    private final ListarEmprestimoPorIdUseCase listarEmprestimoPorIdUseCase;
+    private final EmprestimoUseCase emprestimoUseCase;
 
     @Operation(summary = "Listar todos os empréstimos de um usuário")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Empréstimos encontrados"), @ApiResponse(responseCode = "404", description = "Nenhum empréstimo encontrado"), @ApiResponse(responseCode = "400", description = "Matrícula inválida"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
@@ -45,16 +39,23 @@ public class EmprestimoController {
     public CollectionModel<EntityModel<DTOListarEmprestimo>> listarTodosEmprestimosUsuario(@RequestParam String matricula) {
 
         try {
-            List<DTOListarEmprestimo> emprestimoDTO = listarEmprestimosUseCase.listarEmpretimosUsuarioUseCase(matricula);
+            List<DTOListarEmprestimo> emprestimoDTO = emprestimoUseCase.listarEmprestimoPorId(Matricula.of(matricula));
 
             if (emprestimoDTO.isEmpty()) {
                 logger.warn("Nenhum empréstimo encontrado para a matrícula {}", matricula);
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum empréstimo encontrado");
             }
 
-            List<EntityModel<DTOListarEmprestimo>> emprestimoModel = emprestimoDTO.stream().map(dto -> EntityModel.of(dto, linkTo(methodOn(EmprestimoController.class).listarTodosEmprestimosUsuario(matricula)).withSelfRel(), linkTo(methodOn(EmprestimoController.class).listarEmprestimoEspecifico(dto.emprestimoid())).withRel("emprestimo-especifico"))).toList();
+            List<EntityModel<DTOListarEmprestimo>> emprestimoModel = emprestimoDTO.stream()
+                    .map(dto -> EntityModel.of(dto,
+                            linkTo(methodOn(EmprestimoController.class)
+                                    .listarTodosEmprestimosUsuario(matricula)).withSelfRel(),
+                            linkTo(methodOn(EmprestimoController.class)
+                                    .listarEmprestimoEspecifico(dto.emprestimoid())).withRel("emprestimo-especifico"))).toList();
 
-            return CollectionModel.of(emprestimoModel, linkTo(methodOn(EmprestimoController.class).listarTodosEmprestimosUsuario(matricula)).withSelfRel());
+            return CollectionModel.of(emprestimoModel, linkTo(
+                    methodOn(EmprestimoController.class)
+                            .listarTodosEmprestimosUsuario(matricula)).withSelfRel());
 
         } catch (IllegalArgumentException e) {
             logger.error("Erro de argumento ao listar empréstimos para matrícula {}: {}", matricula, e.getMessage(), e);
@@ -73,14 +74,17 @@ public class EmprestimoController {
     public EntityModel<DTOListagemCompleta> listarEmprestimoEspecifico(@PathVariable Long id) {
 
         try {
-            DTOListagemCompleta dto = listarEmprestimoPorIdUseCase.listarEmprestimoPorId(id);
+            DTOListagemCompleta dto = emprestimoUseCase.listarEmprestimoPorId(id);
 
             if (dto == null) {
                 logger.warn("Nenhum empréstimo encontrado com ID {}", id);
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foi encontrado o empréstimo com o ID informado");
             }
 
-            return EntityModel.of(dto, linkTo(methodOn(EmprestimoController.class).listarEmprestimoEspecifico(id)).withSelfRel(), linkTo(methodOn(EmprestimoController.class).listarTodosEmprestimosUsuario(dto.matricula())).withRel("todos-emprestimos"));
+            return EntityModel.of(dto, linkTo(methodOn(EmprestimoController.class)
+                    .listarEmprestimoEspecifico(id))
+                    .withSelfRel(), linkTo(
+                            methodOn(EmprestimoController.class).listarTodosEmprestimosUsuario(dto.matricula())).withRel("todos-emprestimos"));
 
         } catch (IllegalArgumentException e) {
             logger.error("ID inválido fornecido: {} - {}", id, e.getMessage(), e);
@@ -96,10 +100,10 @@ public class EmprestimoController {
     @Operation(summary = "Efetuar um empréstimo")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Empréstimo realizado com sucesso"), @ApiResponse(responseCode = "400", description = "Dados inválidos"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
     @PostMapping("/efetuar")
-    public ResponseEntity<DTOResultadoEmprestimo> efetuarEmprestimo(@RequestBody DTOEmprestimo dtoEmprestimo) {
+    public ResponseEntity<DTOResultadoEmprestimo> efetuarEmprestimo(@RequestBody @Valid DTOEmprestimo dtoEmprestimo) {
 
         try {
-            return ResponseEntity.ok(realizarEmprestimoUseCase.executarEmprestimo(dtoEmprestimo));
+            return ResponseEntity.ok(emprestimoUseCase.registrarEmprestimo(dtoEmprestimo));
 
         } catch (IllegalArgumentException e) {
             logger.error("Erro de argumento ao efetuar empréstimo: {}", e.getMessage(), e);
@@ -116,7 +120,7 @@ public class EmprestimoController {
     public ResponseEntity<?> efetuarDevolucao(@RequestBody DTOEmprestimo dtoEmprestimo) {
 
         try {
-            devolucaoEmprestimoUseCase.executarDevolucao(dtoEmprestimo);
+            emprestimoUseCase.devolverEmprestimo(dtoEmprestimo);
 
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {

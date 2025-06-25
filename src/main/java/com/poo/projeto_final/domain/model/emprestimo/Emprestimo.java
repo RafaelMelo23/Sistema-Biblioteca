@@ -2,50 +2,48 @@ package com.poo.projeto_final.domain.model.emprestimo;
 
 import com.poo.projeto_final.domain.enums.StatusEmprestimo;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
-import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
-@Setter
-@Entity
-@Table(name = "emprestimo")
 public class Emprestimo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "exemplar_livro_id", nullable = false)
-    private Long exemplarLivroId;
-
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "matricula_id", nullable = false))
-    private Matricula matricula;
-
-    @Column(name = "data_emprestimo", nullable = false)
-    private LocalDate dataEmprestimo;
-
-    @Column(name = "data_entrega_prevista", nullable = false)
-    private LocalDate dataPrevista;
-
-    @Column(name = "data_entrega_factual")
+    private final Long exemplarLivroId;
+    private final Matricula matricula;
+    private final LocalDate dataEmprestimo;
+    private final LocalDate dataPrevista;
     private LocalDate dataFactual;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status_emprestimo", nullable = false, length = 12)
     private StatusEmprestimo statusEmprestimo;
 
-    public static Emprestimo realizarEmprestimo(Matricula Matricula, Long exemplarLivroId, LocalDate dataPrevista, StatusEmprestimo statusEmprestimo) {
-        Emprestimo emprestimo = new Emprestimo();
-        emprestimo.setDataPrevista(dataPrevista);
-        emprestimo.setDataEmprestimo(LocalDate.now());
-        emprestimo.setMatricula(Matricula);
-        emprestimo.setExemplarLivroId(exemplarLivroId);
-        emprestimo.setStatusEmprestimo(statusEmprestimo);
+    private Emprestimo(Matricula matricula, Long exemplarLivroId, LocalDate dataPrevista) {
+        this.exemplarLivroId = exemplarLivroId;
+        this.matricula = matricula;
+        this.dataEmprestimo = LocalDate.now();
+        this.dataPrevista = dataPrevista;
+        this.statusEmprestimo = StatusEmprestimo.ATIVO;
+    }
 
-        return emprestimo;
+    public Emprestimo(Long id, Long exemplarLivroId, Matricula matricula, LocalDate dataEmprestimo, LocalDate dataPrevista, LocalDate dataFactual, StatusEmprestimo statusEmprestimo) {
+        this.id = id;
+        this.exemplarLivroId = exemplarLivroId;
+        this.matricula = matricula;
+        this.dataEmprestimo = dataEmprestimo;
+        this.dataPrevista = dataPrevista;
+        this.dataFactual = dataFactual;
+        this.statusEmprestimo = statusEmprestimo;
+    }
+
+    public static Emprestimo realizarEmprestimo(Matricula matricula, Long exemplarLivroId, LocalDate dataPrevista) {
+        return new Emprestimo(matricula, exemplarLivroId, dataPrevista);
+    }
+
+    public void finalizar() {
+        if(this.statusEmprestimo != StatusEmprestimo.ATIVO) {
+            throw new IllegalStateException("Empréstimo não pode ser finalizado pois não está ativo.");
+        }
+        this.dataFactual = LocalDate.now();
+        this.statusEmprestimo = StatusEmprestimo.FINALIZADO;
     }
 }

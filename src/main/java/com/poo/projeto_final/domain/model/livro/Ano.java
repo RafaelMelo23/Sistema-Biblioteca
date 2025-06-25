@@ -8,7 +8,7 @@ public class Ano {
 
     protected Ano() {}
 
-    Ano(String value) {
+    public Ano(String value) {
         this.value = value;
     }
 

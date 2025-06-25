@@ -1,10 +1,10 @@
-package com.poo.projeto_final.domain.service;
+package com.poo.projeto_final.impl.domain.service;
 
 import com.poo.projeto_final.application.dto.DTOLivro;
 import com.poo.projeto_final.domain.model.livro.Isbn;
 import com.poo.projeto_final.domain.model.livro.Livro;
 import com.poo.projeto_final.domain.model.livro.Titulo;
-import com.poo.projeto_final.domain.repository.DAOLivro;
+import com.poo.projeto_final.domain.repository.LivroRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,11 +19,11 @@ public class LivroService {
     /**
      * Interface JPA para chamadas ao banco relacionadas à tabela de livros.
      */
-    private final DAOLivro daoLivro;
+    private final LivroRepository livroRepository;
     Logger logger = LoggerFactory.getLogger(LivroService.class);
 
-    public LivroService(DAOLivro daoLivro) {
-        this.daoLivro = daoLivro;
+    public LivroService(LivroRepository livroRepository) {
+        this.livroRepository = livroRepository;
     }
 
     /**
@@ -37,11 +37,11 @@ public class LivroService {
     @Transactional
     public Livro cadastrarLivro(DTOLivro dtoLivro) {
 
-        if (daoLivro.existsByTitulo(Titulo.of(dtoLivro.titulo()))) {
+        if (livroRepository.existsByTitulo(Titulo.of(dtoLivro.titulo()))) {
             throw new IllegalArgumentException("Titulo já cadastrado");
         }
 
-        if (daoLivro.existsByIsbn(Isbn.of(dtoLivro.isbn()))) {
+        if (livroRepository.existsByIsbn(Isbn.of(dtoLivro.isbn()))) {
             throw new IllegalArgumentException("Isbn já cadastrado");
         }
 
@@ -49,7 +49,7 @@ public class LivroService {
             Livro livro = Livro.criarLivro(dtoLivro.titulo(), dtoLivro.autor(),
                     dtoLivro.isbn(), dtoLivro.ano(), dtoLivro.editora());
 
-            return daoLivro.save(livro);
+            return livroRepository.save(livro);
 
         } catch (Exception e) {
             logger.error("Erro ao cadastrar livro: {}", e.getMessage(), e);

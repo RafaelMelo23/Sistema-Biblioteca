@@ -4,12 +4,13 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Cpf {
+
     private String value;
 
-    protected Cpf() {
+    public Cpf() {
     }
 
-    Cpf(String value) {
+    public Cpf(String value) {
         if (value == null || !value.matches("\\d{11}")) {
             throw new IllegalArgumentException("CPF inválido: deve conter 11 digitos");
         }

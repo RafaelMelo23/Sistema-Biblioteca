@@ -1,14 +1,16 @@
-package com.poo.projeto_final.domain.service;
+package com.poo.projeto_final.impl.domain.service;
 
 import com.poo.projeto_final.application.dto.DTOAluno;
 import com.poo.projeto_final.application.dto.DTOProfessor;
+import com.poo.projeto_final.domain.impl.domain.repository.AlunoRepositoryImpl;
+import com.poo.projeto_final.domain.impl.domain.repository.ProfessorRepositoryImpl;
 import com.poo.projeto_final.domain.model.aluno.Aluno;
 import com.poo.projeto_final.domain.model.professor.Professor;
 import com.poo.projeto_final.domain.model.shared.vo.Matricula;
 import com.poo.projeto_final.domain.model.usuario.Cpf;
 import com.poo.projeto_final.domain.model.usuario.Email;
-import com.poo.projeto_final.domain.repository.DAOAluno;
-import com.poo.projeto_final.domain.repository.DAOProfessor;
+import com.poo.projeto_final.domain.model.usuario.UsuarioBiblioteca;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Serviço responsável pela lógica de negócio relacionada aos usuários, validações e comunicação com o banco.
  */
 @Service
+@AllArgsConstructor
 public class UsuarioService {
 
     private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
@@ -25,13 +28,8 @@ public class UsuarioService {
     /**
      * Interfaces JPA para chamadas ao banco relacionadas à tabela de alunos e professores.
      */
-    private final DAOAluno daoAluno;
-    private final DAOProfessor daoProfessor;
-
-    public UsuarioService(DAOAluno daoAluno, DAOProfessor daoProfessor) {
-        this.daoAluno = daoAluno;
-        this.daoProfessor = daoProfessor;
-    }
+    private final AlunoRepositoryImpl alunoRepository;
+    private final ProfessorRepositoryImpl professorRepository;
 
     /**
      * Cadastra um novo aluno baseado no DTO recebido.
@@ -42,18 +40,18 @@ public class UsuarioService {
     @Transactional
     public void criarAluno(DTOAluno dtoAluno) {
 
-        if (daoAluno.existsByMatricula(Matricula.of(dtoAluno.matricula()))) {
+        if (alunoRepository.existsByMatricula(Matricula.of(dtoAluno.matricula()))) {
             throw new IllegalArgumentException("Já existe um aluno registrado com a matrícula: " + dtoAluno.matricula());
         }
 
-        if (daoAluno.existsByEmailOrCpf(Email.of(dtoAluno.email()), Cpf.of(dtoAluno.cpf()))) {
+        if (alunoRepository.existsByEmailOrCpf(Email.of(dtoAluno.email()), Cpf.of(dtoAluno.cpf()))) {
             throw new IllegalArgumentException("Já existe um aluno registrado com a matrícula: " + dtoAluno.matricula());
         }
 
         try {
             Aluno aluno = Aluno.of(dtoAluno.nome(), dtoAluno.email(), dtoAluno.cpf(), dtoAluno.matricula());
 
-            daoAluno.save(aluno);
+            alunoRepository.save(aluno);
         } catch (Exception e) {
             log.error("Erro ao criar aluno: {}", e.getMessage(), e);
             throw new IllegalArgumentException("Erro ao criar aluno: " + e.getMessage());
@@ -69,7 +67,7 @@ public class UsuarioService {
     @Transactional
     public void criarProfessor(DTOProfessor dtoProfessor) {
 
-        if (daoProfessor.existsByMatricula(Matricula.of(dtoProfessor.matricula()))) {
+        if (professorRepository.existsByMatricula(Matricula.of(dtoProfessor.matricula()))) {
             throw new IllegalArgumentException("Já existe um professor cadastrado com a mátricula " + dtoProfessor.matricula());
         }
 
@@ -77,11 +75,31 @@ public class UsuarioService {
             Professor professor = Professor.of(dtoProfessor.nome(), dtoProfessor.email(),
                     dtoProfessor.cpf(), dtoProfessor.matricula());
 
-            daoProfessor.save(professor);
+            professorRepository.save(professor);
         } catch (Exception e) {
             log.error("Erro ao criar professor: {}", e.getMessage(), e);
             throw new IllegalArgumentException("Erro ao criar professor: " + e.getMessage());
         }
     }
 
+    public UsuarioBiblioteca validarExistencia(Matricula matricula) {
+
+        UsuarioBiblioteca usuario = alunoRepository.findByMatricula(matricula)
+                .map(aluno -> (UsuarioBiblioteca) aluno)
+                .orElseGet(() ->
+                        professorRepository.findByMatricula(matricula)
+                                .map(prof -> (UsuarioBiblioteca) prof)
+                                .orElseThrow(() -> new IllegalArgumentException("Usuário com a matricula informada não existe")));
+
+        return usuario;
+    }
+
+    public String buscarNome(Matricula matricula) {
+
+        String nome = alunoRepository.findNameByMatricula(matricula)
+                        .or(() -> professorRepository.findNameByMatricula(matricula))
+                                .orElseThrow(() -> new IllegalArgumentException("Usuário com a matricula informada não existe"));
+
+        return nome;
+    }
 }

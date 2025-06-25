@@ -8,7 +8,7 @@ public class Editora {
 
     protected Editora() {}
 
-    Editora(String value) {
+    public Editora(String value) {
         this.value = value;
     }
 
