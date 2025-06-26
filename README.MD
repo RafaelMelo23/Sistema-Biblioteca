@@ -29,16 +29,16 @@ Mais do que CRUD, este sistema foi uma oportunidade para demonstrar padrões que
 
 ## 🔧 Ferramentas e Versões — Por que escolhi
 
-| Tecnologia                | Versão | Propósito e Benefício                                                                                                      |
-| ------------------------- | ------ |----------------------------------------------------------------------------------------------------------------------------|
-| **Java**                  | 21+    | LTS moderno com recursos como Records e Pattern Matching, além de desempenho e segurança aprimorados.                      |
-| **Spring Boot**           | 3.3.12 | Framework para acelerar configuração, injeção de dependências e execução de APIs de produção.                              |
-| **Spring HATEOAS**        | –      | Cria respostas hipertextuais com links, tornando a API autodocumentada e permitindo descoberta de ações pelo front-end.    |
+| Tecnologia                | Versão | Propósito e Benefício                                                                                                                     |
+| ------------------------- | ------ |-------------------------------------------------------------------------------------------------------------------------------------------|
+| **Java**                  | 21+    | LTS moderno com recursos como Records e Pattern Matching, além de desempenho e segurança aprimorados.                                     |
+| **Spring Boot**           | 3.3.12 | Framework para acelerar configuração, injeção de dependências e execução de APIs de produção.                                             |
+| **Spring HATEOAS**        | –      | Cria respostas hipertextuais com links, tornando a API autodocumentada e permitindo descoberta de ações pelo front-end.                   |
 | **Spring Data JPA**       | –      | Persistência via **repositórios customizados** definidos como contratos no domínio, com implementações em `infrastructure`, seguindo DDD. |
-| **H2 Database**           | –      | Banco em memória para prototipagem e testes automáticos, garantindo feedback rápido sem setup externo.                     |
-| **Springdoc OpenAPI**     | –      | Gera documentação interativa (Swagger UI), mantendo-a sempre atualizada com o código.                                      |
-| **Lombok**                | –      | Elimina boilerplate em getters, setters e construtores, deixando classes de modelo mais limpas.                            |
-| **Front-end Web**         | HTML/CSS/JS | Interface que consome endpoints HATEOAS via fetch, demonstrando integração desacoplada entre cliente e servidor. |
+| **H2 Database**           | –      | Banco em memória em função da primeira versão do projeto ter sido utilizada para meu projeto final da matéria de POO.                     |
+| **Springdoc OpenAPI**     | –      | Gera documentação interativa (Swagger UI), mantendo-a sempre atualizada com o código.                                                     |
+| **Lombok**                | –      | Elimina boilerplate em getters, setters e construtores, deixando classes de modelo mais limpas.                                           |
+| **Front-end Web**         | HTML/CSS/JS | Interface que consome endpoints HATEOAS via fetch, demonstrando integração desacoplada entre cliente e servidor.                          |
 
 ---
 
