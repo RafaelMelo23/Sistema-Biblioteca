@@ -37,9 +37,8 @@ public class Livro {
         return new Livro(titulo, autor, isbn, ano, editora);
     }
 
-    public List<ExemplarLivro> criarExemplares(int quantidade, long contagemTotalExemplares) {
+    public List<ExemplarLivro> criarExemplares(Livro livro, int quantidade, long contagemTotalExemplares) {
 
-        Livro livro = this;
         List<ExemplarLivro> exemplares = new ArrayList<>(quantidade);
 
         for (int i = 0; i < quantidade; i++) {

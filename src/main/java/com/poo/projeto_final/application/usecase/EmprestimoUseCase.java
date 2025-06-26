@@ -108,7 +108,7 @@ public class EmprestimoUseCase {
         );
     }
 
-    public List<DTOListarEmprestimo> listarEmprestimoPorId(Matricula matricula) {
+    public List<DTOListarEmprestimo> listarEmprestimoPorMatricula(Matricula matricula) {
 
         List<Emprestimo> emprestimosPorUsuario = emprestimoRepositoryImpl.listarEmprestimosUsuario(matricula);
 

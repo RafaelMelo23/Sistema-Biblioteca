@@ -11,6 +11,7 @@ import com.poo.projeto_final.domain.model.usuario.UsuarioBiblioteca;
 import com.poo.projeto_final.domain.repository.AlunoRepository;
 import com.poo.projeto_final.domain.repository.ProfessorRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
  * Serviço responsável pela lógica de negócio relacionada aos usuários, validações e comunicação com o banco.
  */
 @Service
+@Slf4j
 @AllArgsConstructor
 public class UsuarioUseCase {
-
-    private static final Logger log = LoggerFactory.getLogger(com.poo.projeto_final.impl.domain.service.UsuarioService.class);
 
     /**
      * Interfaces JPA para chamadas ao banco relacionadas à tabela de alunos e professores.
@@ -48,7 +48,10 @@ public class UsuarioUseCase {
             throw new IllegalArgumentException("Já existe um aluno registrado com a matrícula: " + dtoAluno.matricula());
         }
 
-        Aluno aluno = Aluno.of(dtoAluno.nome(), dtoAluno.cpf(), dtoAluno.email(), dtoAluno.matricula());
+        Aluno aluno = Aluno.of(dtoAluno.nome(),
+                dtoAluno.cpf(),
+                dtoAluno.email(),
+                dtoAluno.matricula());
 
         try {
             alunoRepository.salvar(aluno);
@@ -72,8 +75,10 @@ public class UsuarioUseCase {
         }
 
         try {
-            Professor professor = Professor.of(dtoProfessor.nome(), dtoProfessor.email(),
-                    dtoProfessor.cpf(), dtoProfessor.matricula());
+            Professor professor = Professor.of(dtoProfessor.nome(),
+                    dtoProfessor.cpf(),
+                    dtoProfessor.email(),
+                    dtoProfessor.matricula());
 
             professorRepository.salvar(professor);
         } catch (Exception e) {

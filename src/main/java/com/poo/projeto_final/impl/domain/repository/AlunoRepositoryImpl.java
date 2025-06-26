@@ -26,7 +26,7 @@ public class AlunoRepositoryImpl implements AlunoRepository {
     @Override
     public Optional<String> findNameByMatricula(Matricula matricula) {
         return entityManager.createQuery("""
-        SELECT al.nome FROM AlunoData al WHERE al.matricula = :matricula""", String.class)
+        SELECT al.nome.value FROM AlunoData al WHERE al.matricula = :matricula""", String.class)
                 .setParameter("matricula", matricula)
                 .getSingleResult().describeConstable();
     }

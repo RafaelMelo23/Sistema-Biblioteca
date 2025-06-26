@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface LivroRepository {
 
-    void salvar(Livro livro);
+    Livro salvar(Livro livro);
 
     boolean existsByTitulo(Titulo titulo);
 

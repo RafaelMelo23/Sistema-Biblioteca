@@ -39,7 +39,7 @@ public class EmprestimoController {
     public CollectionModel<EntityModel<DTOListarEmprestimo>> listarTodosEmprestimosUsuario(@RequestParam String matricula) {
 
         try {
-            List<DTOListarEmprestimo> emprestimoDTO = emprestimoUseCase.listarEmprestimoPorId(Matricula.of(matricula));
+            List<DTOListarEmprestimo> emprestimoDTO = emprestimoUseCase.listarEmprestimoPorMatricula(Matricula.of(matricula));
 
             if (emprestimoDTO.isEmpty()) {
                 logger.warn("Nenhum empréstimo encontrado para a matrícula {}", matricula);

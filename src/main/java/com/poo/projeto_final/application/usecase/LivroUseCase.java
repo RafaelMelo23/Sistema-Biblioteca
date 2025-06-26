@@ -38,10 +38,10 @@ public class LivroUseCase {
         Livro livro = Livro.criarLivro(dto.titulo(), dto.autor(),
                 dto.isbn(), dto.ano(), dto.editora());
 
-        List<ExemplarLivro> exemplares = livro.criarExemplares(dto.quantidade(), exemplarRepository.contarTodos());
-
         try {
-            livroRepository.salvar(livro);
+            Livro livroManaged = livroRepository.salvar(livro);
+
+            List<ExemplarLivro> exemplares = livro.criarExemplares(livroManaged, dto.quantidade(), exemplarRepository.contarTodos());
             exemplarRepository.salvarAll(exemplares);
 
         } catch (Exception e) {

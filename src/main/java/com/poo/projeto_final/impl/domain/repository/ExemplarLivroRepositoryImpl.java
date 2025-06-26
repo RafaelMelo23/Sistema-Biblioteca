@@ -5,6 +5,7 @@ import com.poo.projeto_final.domain.enums.StatusExemplar;
 import com.poo.projeto_final.domain.model.exemplar.CodigoExemplar;
 import com.poo.projeto_final.domain.model.exemplar.ExemplarLivro;
 import com.poo.projeto_final.domain.repository.ExemplarLivroRepository;
+import com.poo.projeto_final.infrastructure.config.persistence.entities.ExemplarLivroData;
 import com.poo.projeto_final.infrastructure.config.persistence.mappers.ExemplarLivroMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -30,10 +31,13 @@ public class ExemplarLivroRepositoryImpl implements ExemplarLivroRepository {
 
     @Override
     public void salvar(ExemplarLivro exemplarLivro) {
+
+        ExemplarLivroData exemplarLivroData = mapper.toData(exemplarLivro);
+
         if (exemplarLivro.getId() == null) {
-            entityManager.persist(exemplarLivro);
+            entityManager.persist(exemplarLivroData);
         } else {
-            entityManager.merge(exemplarLivro);
+            entityManager.merge(exemplarLivroData);
         }
     }
 
@@ -41,12 +45,13 @@ public class ExemplarLivroRepositoryImpl implements ExemplarLivroRepository {
     public void salvarAll(List<ExemplarLivro> exemplarLivros) {
 
         for (int i = 0; i < exemplarLivros.size(); i++) {
-            ExemplarLivro exemplar = exemplarLivros.get(i);
 
-            if (exemplar.getId() == null) {
-                entityManager.persist(exemplar);
+            ExemplarLivroData exemplarLivroData = mapper.toData(exemplarLivros.get(i));
+
+            if (exemplarLivroData.getId() == null) {
+                entityManager.persist(exemplarLivroData);
             } else {
-                entityManager.merge(exemplar);
+                entityManager.merge(exemplarLivroData);
             }
 
             if (i % 50 == 0) {
@@ -92,7 +97,7 @@ public class ExemplarLivroRepositoryImpl implements ExemplarLivroRepository {
                 .findFirst();
     }
 
-    public List<DTOExemplarLivro> buscarDTOsPorLivroEStatus(Long livroId, StatusExemplar status) {
+    public List<DTOExemplarLivro> buscarPorLivroEStatus(Long livroId, StatusExemplar status) {
         return entityManager.createQuery("""
         SELECT new com.poo.projeto_final.application.dto.DTOExemplarLivro(e.codigoExemplar.value, e.statusExemplar)
         FROM ExemplarLivroData e
@@ -119,8 +124,11 @@ public class ExemplarLivroRepositoryImpl implements ExemplarLivroRepository {
     @Override
     public CodigoExemplar findCodigoExemplarByExemplarId(Long exemplarId) {
         return entityManager.createQuery("""
-        SELECT ex.codigoExemplar FROM ExemplarLivroData ex WHERE ex.id = :exemplarId""", CodigoExemplar.class
-        ).getSingleResult();
+        SELECT ex.codigoExemplar FROM ExemplarLivroData ex WHERE ex.id = :exemplarId
+    """, CodigoExemplar.class)
+                .setParameter("exemplarId", exemplarId)
+                .getSingleResult();
     }
+
 }
 
