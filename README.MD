@@ -66,4 +66,18 @@ com.poo.projeto_final
     │   ├── entities
     │   └── mappers
     └── scheduled
+```
 
+## 📷 Capturas de Tela da Interface (UI)
+
+### Tela Inicial: Gerenciamento de Empréstimos
+![Tela Inicial Emprestimos](imagens/Emprestimos.png)
+
+### Tela de Gerenciamento de Livros
+![Tela Livros](imagens/Livro.png)
+
+### Tela de Gerenciamento de Usuarios
+![Tela Usuario](imagens/Usuario.png)
+
+### Swagger UI
+![Tela Swagger](imagens/Swagger.png)
